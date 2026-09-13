@@ -1,0 +1,38 @@
+# Provenance: Copied from hdot123/infraro-core repository
+# Source: .github/workflows/branch-cleanup.yml
+# Tag: v0.18.4
+# Commit: 2225716
+# Copy Date: 2026-09-13
+name: Branch Cleanup
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour at minute 0 (UTC)
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Cleanup mode: scheduled (sweep all) or immediate (specific branch)'
+        required: true
+        default: 'scheduled'
+        type: choice
+        options:
+          - scheduled
+          - immediate
+      branch:
+        description: 'Branch to clean (required for immediate mode)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: branch-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    uses: hdot123/infraro-core/.github/workflows/branch-cleanup.yml@v0.18.4

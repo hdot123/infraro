@@ -1,0 +1,23 @@
+# Provenance: Copied from hdot123/infraro-core repository
+# Source: .github/workflows/evolution-governance.yml
+# Tag: v0.18.4
+# Commit: 2225716
+# Copy Date: 2026-09-13
+name: Governance
+on:
+  pull_request_target:
+    branches: [main]
+    paths:
+      - '.evolution/**'
+      - '.github/workflows/**'
+      - 'src/infra_core/engine/**'
+      - 'webhook-scripts/**'
+      - 'actions/**'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  governance:
+    uses: hdot123/infraro-core/.github/workflows/evolution-governance.yml@v0.18.4

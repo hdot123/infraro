@@ -1,0 +1,25 @@
+name: Auto Merge
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  workflow_call:
+    inputs:
+      engine_ref:
+        required: false
+        type: string
+        description: "Engine ref to use"
+    secrets:
+      dispatch_token:
+        required: true
+        description: "合并/更新分支/评论凭证（caller 侧 DISPATCH_TOKEN PAT，不受 GITHUB_TOKEN 递归抑制）"
+      dispatch-token:
+        required: false
+        description: "hyphen 过渡变体（与 dispatch_token 等价；取值熔合 snake || hyphen，两步终态后删除）"
+  workflow_dispatch:
+
+jobs:
+  auto-merge:
+    uses: hdot123/infraro-core/.github/workflows/auto-merge-pipeline.yml@v0.18.4
+    secrets:
+      dispatch_token: ${{ secrets.dispatch_token }}
+      dispatch-token: ${{ secrets['dispatch-token'] }}

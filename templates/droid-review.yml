@@ -1,0 +1,38 @@
+name: Droid Review
+on:
+  pull_request_target:
+    types: [opened, ready_for_review, reopened, synchronize]
+  workflow_call:
+    inputs:
+      engine_ref:
+        required: false
+        type: string
+        description: "Engine ref to use"
+    secrets:
+      factory_api_key:
+        required: true
+        description: "Factory API key for authentication"
+      nvidia_kong_proxy_key:
+        required: false
+        description: "Kong proxy key for NVIDIA LLM access"
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number (for manual runs)'
+        required: false
+        type: string
+      head_sha:
+        description: 'Head SHA override (for manual runs)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  droid-auto-review:
+    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.4

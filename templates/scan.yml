@@ -1,0 +1,33 @@
+name: Scan
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_call:
+    inputs:
+      engine_ref:
+        required: false
+        type: string
+        description: "Engine ref to use"
+    secrets:
+      dispatch_token:
+        required: true
+        description: "PAT (hdot123) for issue/label writes and self-heal dispatch"
+      dispatch-token:
+        required: false
+        description: "hyphen 过渡变体（与 dispatch_token 等价；env 层熔合 snake || hyphen）"
+      linear_api_key:
+        required: false
+        description: "LINEAR_API_KEY for auto_close_resolved Linear state verification"
+      linear-api-key:
+        required: false
+        description: "hyphen 过渡变体（与 linear_api_key 等价；env 层熔合 snake || hyphen）"
+jobs:
+  scan:
+    uses: hdot123/infraro-core/.github/workflows/evolution-scan.yml@v0.18.4
+    with:
+      engine_ref: ${{ inputs.engine_ref }}
+    secrets:
+      dispatch_token: ${{ secrets.dispatch_token }}
+      dispatch-token: ${{ secrets['dispatch-token'] }}
+      linear_api_key: ${{ secrets.linear_api_key }}
+      linear-api-key: ${{ secrets['linear-api-key'] }}
