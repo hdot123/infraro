@@ -33,9 +33,11 @@ pve-linux
 ## 引擎转私 runner 迁移清单
 
 ### 触发条件
+
 - infraro-core 转为私有仓
 
 ### 动作清单
+
 1. **工作流文件替换**：将引擎仓内所有 workflows 的 `runs-on` 从 `ubuntu-latest` 逐文件替换为 `self-hosted,pve-linux`
    - 位置：`.github/workflows/` 目录下的所有 YAML 文件
    - 搜索：`runs-on: ubuntu-latest`
@@ -52,6 +54,7 @@ pve-linux
    - 在私有仓中，self-hosted runners 可以更好地控制环境和资源
 
 ### 理由
+
 - **私仓无可信性问题**：私有仓库的代码和工作流是可控的，使用 self-hosted runners 更安全
 - **免烧 GitHub Pro 分钟数**：私有仓库使用 GitHub-hosted runners 需要付费分钟数，self-hosted runners are unlimited
 
