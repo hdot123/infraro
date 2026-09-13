@@ -1,25 +1,27 @@
 # Getting Started with infraro
 
-Welcome to infraro, the infrastructure automation engine for modern CI/CD pipelines.
+Welcome to infraro, the public declaration layer for the evolution engine system. This guide will help you understand and use the infraro ecosystem.
 
-## Installation
+## Overview
 
-Install the infraro engine anonymously via pip:
+infraro provides:
+- Rule package specifications
+- Consumer onboarding guides  
+- Workflow templates
+- API references
+- Public documentation face
 
-```bash
-pip install git+https://github.com/hdot123/infraro-core.git@v0.18.4
-```
+The actual declarations follow each consumer project, while this repository serves as the specification and template source of truth.
 
-## Basic Setup
+## Quick Start
 
-1. Add infraro workflow templates to your consumer repository
-2. Configure your repository-specific settings
-3. Set up required secrets (see [Consumer Onboarding](./consumer-onboarding.md))
+To get started using the infraro engine in your project:
 
-## Quick Integration
-
-To integrate infraro with your repository, add one of the workflow templates from the [templates](../templates/) directory to your `.github/workflows/` directory.
+1. Choose the appropriate workflow templates for your needs
+2. Configure the templates according to your repository requirements
+3. Set up the necessary secrets and permissions
+4. Run your first evolution scan
 
 ## Next Steps
 
-Continue with the [Consumer Onboarding](./consumer-onboarding.md) guide to learn how to fully configure infraro for your specific repository.
+Continue to the [Consumer Onboarding](consumer-onboarding.md) guide to learn how to set up your consumer repository with the infraro engine.

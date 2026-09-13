@@ -10,22 +10,17 @@ on:
         type: string
         description: "Engine ref to use"
     secrets:
-      DISPATCH_TOKEN:
+      dispatch_token:
         required: true
+        description: "PAT (hdot123) for issue/label writes and self-heal dispatch"
+      dispatch-token:
+        required: false
+        description: "hyphen 过渡变体（与 dispatch_token 等价；env 层熔合 snake || hyphen）"
 jobs:
   heartbeat:
-    runs-on: [self-hosted, pve-linux]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Install infraro engine
-        run: pip install git+https://github.com/hdot123/infraro-core.git@v0.18.4
-      
-      - name: Run heartbeat check
-        run: infraro heartbeat --repo ${{ github.repository }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.4
+    with:
+      engine_ref: ${{ inputs.engine_ref }}
+    secrets:
+      dispatch_token: ${{ secrets.dispatch_token }}
+      dispatch-token: ${{ secrets['dispatch-token'] }}
