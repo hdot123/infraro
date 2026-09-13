@@ -37,17 +37,22 @@ The runner should use the following labels:
 
 ## Workflow Templates
 
-Use the provided workflow templates from the declaration repository. All templates use the `uses@tag` anchor discipline (full anchor with engine=workflow=same tag), prohibiting `@main` usage.
+Use the provided workflow templates from the declaration repository. The system uses a dual形态 approach:
+
+- **5 thin-caller templates** (workflow-level tag anchors): scan.yml, heartbeat.yml, auto-merge.yml, droid-review.yml, watchdog.yml - these use the `uses@tag` anchor discipline (full anchor with engine=workflow=same tag), prohibiting `@main` usage.
+- **2 copy-form templates** (provenance header + composite action SHA pins): governance.yml, branch-cleanup.yml - these contain full workflow content with provenance headers and pinned composite actions at specific commit SHAs.
+
+All templates prohibit `@main` usage in their respective anchor disciplines.
 
 Templates available:
 
-- scan.yml
-- heartbeat.yml
-- governance.yml
-- branch-cleanup.yml
-- auto-merge.yml
-- droid-review.yml
-- watchdog.yml
+- scan.yml (thin-caller)
+- heartbeat.yml (thin-caller)
+- governance.yml (copy-form)
+- branch-cleanup.yml (copy-form)
+- auto-merge.yml (thin-caller)
+- droid-review.yml (thin-caller)
+- watchdog.yml (thin-caller)
 
 ## Naming Contracts
 
