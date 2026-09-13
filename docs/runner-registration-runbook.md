@@ -48,6 +48,7 @@ After registration, verify that:
 ## Troubleshooting
 
 If a runner goes offline:
+
 1. Check network connectivity
 1. Verify the runner process is running
 1. Review runner logs for errors
