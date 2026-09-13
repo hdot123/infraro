@@ -20,7 +20,8 @@ This runbook provides instructions for registering self-hosted runners for indiv
 
 1. Ensure the runner uses the correct labels:
 
-```
+
+```text
 self-hosted
 pve-linux
 ```
@@ -35,7 +36,7 @@ pve-linux
 After registration, verify that:
 
 1. The runner appears in the repository's Settings → Actions → Runners
-1. The runner shows as "Online" 
+1. The runner shows as "Online"
 1. Workflows can successfully use the runner
 
 ## Maintenance
@@ -45,9 +46,11 @@ After registration, verify that:
 - Verify that labels remain consistent
 - Ensure network connectivity to GitHub
 
+
 ## Troubleshooting
 
 If a runner goes offline:
+
 1. Check network connectivity
 1. Verify the runner process is running
 1. Review runner logs for errors
