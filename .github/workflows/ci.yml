@@ -26,6 +26,21 @@ jobs:
           files: .
           config: .markdownlint.json
 
+      - name: Run shellcheck advisory
+        continue-on-error: true
+        run: |
+          if [ -d "tools/" ] || [ -d "scripts/" ]; then
+            find tools/ scripts/ -name "*.sh" -type f -exec shellcheck {} \;
+          fi
+
+      - name: Run ruff advisory
+        continue-on-error: true
+        run: |
+          if [ -d "tools/" ] || [ -d "scripts/" ]; then
+            python -m pip install ruff
+            find tools/ scripts/ -name "*.py" -type f -exec ruff check {} \;
+          fi
+
   # ─── substrate gates: advisory (step-level continue-on-error) ───
   # 五道门先红着上线（substrate-gate-suite 裁定 2026-09-13）：门照常运行并
   # 如实输出红/绿；存量红项逐条登记于 substrate/gate0-exemptions.md

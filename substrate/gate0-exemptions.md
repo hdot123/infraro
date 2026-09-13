@@ -12,8 +12,6 @@
 | Entry | Reason | Owner | Owning feature | Detail |
 |---|---|---|---|---|
 | `LICENSE` | static legal text | hdot123 | engine-substrate-boundary | 静态法律文本，无质量门域；随 boundary 画线裁定归属 |
-| `tools` | no dedicated linter | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 无 shellcheck/ruff 面；gate3 敏感扫描已覆盖；bookkeeping 裁定补扫或并入引擎扫描域 |
-| `scripts` | no dedicated linter | hdot123 | substrate-inventory-bookkeeping | 同上（gate3 已覆盖敏感面） |
 
 ## Gate 1: registered interface stock（模板调用面存量）
 
@@ -39,6 +37,13 @@ Accepts（非暴露，不登记为存量）：`/Users/runner`、`/home/runner`�
 托管 runner 家目录）；`@users.noreply.github.com`/example 邮箱；RFC 5737
 文档 IP 段；prose 中「1Password」产品名词（暴露形态是 op:// 条目引用 URI，
 已按 op:// 形态扫描）。
+
+## Gate 0 Update (2026-09-14)
+
+| Entry | Reason | Owner | Owning feature | Detail |
+|---|---|---|---|---|
+| `tools` | shellcheck/ruff advisory linters added | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
+| `scripts` | shellcheck/ruff advisory linters added | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
 
 ## Gate 4
 

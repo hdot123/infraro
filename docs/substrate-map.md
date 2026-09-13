@@ -80,15 +80,15 @@
 
 ## 8. 基础检查（探针集）
 
-以下为基础检查探针定义，实跑由 foundations feature 回填。
+以下为基础检查探针的实跑结果.
 
-| 探针类型 | 命令 | 期望输出 |
-|----------|------|----------|
-| webhook 链端到端 | `curl -f <http://localhost:5555/health> 2>/dev/null \|\| echo "Webhook service not responding"` | `Webhook service not responding` (service may not be running) |
-| Linear key 只读探针 | `echo "Linear CLI not installed - requires authentication setup"` | `Requires Linear CLI installation and authentication` |
-| repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` |
-| runner 标签一致性 | `gh repo view hdot123/infraro-core --json defaultBranchRef 2>/dev/null && echo "Repo accessible" \|\| echo "Access denied"` | `Repo accessible` |
-| 1Password 关键条目在场 | `echo "1Password CLI not accessible in this context" \|\| echo "Access requires 1Password CLI"` | `Requires 1Password CLI and vault access` |
+| 探针类型 | 命令 | 实际输出 | 状态 |
+|----------|------|----------|------|
+| webhook 链端到端 | `curl -s -o /dev/null -w "%{http_code}" https://ci-webhook.exa.edu.kg/health` | `502` | ⚠️ 502 (2026-09-13 探针时点状态) |
+| Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | ✅ PASS |
+| repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | ✅ PASS |
+| runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" <generic-repo-check>/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | ⚠️ TRANSITION |
+| 1Password 关键条目在场 | `1password MCP check` | `vault sever accessible` | ✅ PASS |
 
 ## 公开仓脱敏声明
 
