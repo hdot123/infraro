@@ -11,14 +11,14 @@ This runbook provides instructions for registering self-hosted runners for indiv
 ## Registration Process
 
 1. On your self-hosted machine, navigate to your Actions Runner directory
-2. Run the configuration command:
+1. Run the configuration command:
 
 ```bash
 # Register a runner for a specific repository
 ./config.sh --url https://github.com/<OWNER>/<REPO_NAME> --token <RUNNER_REGISTRATION_TOKEN>
 ```
 
-3. Ensure the runner uses the correct labels:
+1. Ensure the runner uses the correct labels:
 
 ```
 self-hosted
@@ -35,8 +35,8 @@ pve-linux
 After registration, verify that:
 
 1. The runner appears in the repository's Settings → Actions → Runners
-2. The runner shows as "Online" 
-3. Workflows can successfully use the runner
+1. The runner shows as "Online" 
+1. Workflows can successfully use the runner
 
 ## Maintenance
 
@@ -49,6 +49,6 @@ After registration, verify that:
 
 If a runner goes offline:
 1. Check network connectivity
-2. Verify the runner process is running
-3. Review runner logs for errors
-4. Re-register if necessary
+1. Verify the runner process is running
+1. Review runner logs for errors
+1. Re-register if necessary

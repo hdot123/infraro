@@ -4,12 +4,12 @@
 
 As of v3 architecture:
 
-- **infraro-core** = Primary forward-moving repository ([link](https://github.com/hdot123/infraro-core))
+- **infraro-core** = Primary forward-moving repository ([GitHub Repository](https://github.com/hdot123/infraro-core))
   - Active development
   - New features and improvements
   - Current engine implementation
   
-- **infra-core** = Frozen maintenance mode ([link](https://github.com/hdot123-org/infra-core))
+- **infra-core** = Frozen maintenance mode ([GitHub Repository](https://github.com/hdot123-org/infra-core))
   - No new feature development
   - Only critical security patches
   - Maintained for backward compatibility
