@@ -45,7 +45,6 @@ After registration, verify that:
 - Verify that labels remain consistent
 - Ensure network connectivity to GitHub
 
-
 ## Troubleshooting
 
 If a runner goes offline:
