@@ -26,6 +26,11 @@
 `substrate/gate0-exemptions.md` Gate 2 节（memory 冻结仓残留分支/在途 PR、
 repositories.yml 补登、ERROR_REPO_MAP 双侧一致性）。
 
+| Item | Kind | Owner | Owning feature | Detail |
+|---|---|---|---|---|
+| `in-flight OPEN PR #1275` | stock | hdot123 | legacy-repo-disposition | 冻结仓 memory 在途 PR（INFRA-1060；清剿时处置） |
+| `residual branch: fix/infra-1060-duplicate-make-git-repo` | stock | hdot123 | legacy-repo-disposition | 冻结仓 memory 未合并分支（首跑后新增，全域分支清剿时清） |
+
 ## Gate 3: exposure scan stock（敏感面存量 + 自引用排除）
 
 | Entry | Reason | Owner | Owning feature | Detail |
