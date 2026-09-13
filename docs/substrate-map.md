@@ -16,11 +16,13 @@
 ### 拉起步骤与验收条目（记忆系统）
 
 #### 拉起步骤
+
 1. 确保 `~/.factory/bin/memory-hook` 存在且可执行
 2. 确保 `~/.memory-core` 目录结构完整
 3. 验证项目记忆系统可正常读写：`~/.factory/bin/memory-hook --host infraro --event session-start`
 
 #### 验收条目
+
 - [ ] `~/.factory/bin/memory-hook` 存在且可执行
 - [ ] `~/.memory-core` 目录存在且包含必要的 hook 文件
 - [ ] `~/.memory/global-kb` 目录存在
@@ -80,20 +82,21 @@
 
 以下为基础检查探针定义，实跑由 foundations feature 回填。
 
-| 探针类型 | 命令 | 期望输出 | 
+| 探针类型 | 命令 | 期望输出 |
 |----------|------|----------|
-| webhook 链端到端 | `curl -f http://localhost:5555/health 2>/dev/null || echo "Webhook service not responding"` | `Webhook service not responding` (service may not be running) |
+| webhook 链端到端 | `curl -f <http://localhost:5555/health> 2>/dev/null \|\| echo "Webhook service not responding"` | `Webhook service not responding` (service may not be running) |
 | Linear key 只读探针 | `echo "Linear CLI not installed - requires authentication setup"` | `Requires Linear CLI installation and authentication` |
-| repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" || echo "Missing"` | `Found` |
-| runner 标签一致性 | `gh repo view hdot123/infraro-core --json defaultBranchRef 2>/dev/null && echo "Repo accessible" || echo "Access denied"` | `Repo accessible` |
-| 1Password 关键条目在场 | `echo "1Password CLI not accessible in this context" || echo "Access requires 1Password CLI"` | `Requires 1Password CLI and vault access` |
+| repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` |
+| runner 标签一致性 | `gh repo view hdot123/infraro-core --json defaultBranchRef 2>/dev/null && echo "Repo accessible" \|\| echo "Access denied"` | `Repo accessible` |
+| 1Password 关键条目在场 | `echo "1Password CLI not accessible in this context" \|\| echo "Access requires 1Password CLI"` | `Requires 1Password CLI and vault access` |
 
 ## 公开仓脱敏声明
 
 - 无生产 IP 段在本文件中暴露
-- 无 token 值在本文件中暴露  
+- 无 token 值在本文件中暴露
 - 无 `/Users/` 宿主路径在本文件中暴露
 - 内部细节写入私有附录 `/Users/busiji/infraro/memory/kb/`
 
 ---
-*Created as part of substrate-map-and-manual feature*
+
+Created as part of substrate-map-and-manual feature
