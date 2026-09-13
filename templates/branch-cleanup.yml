@@ -1,3 +1,8 @@
+# Provenance: Copied from hdot123/infraro-core repository
+# Source: .github/workflows/branch-cleanup.yml
+# Tag: v0.18.4
+# Commit: 2225716
+# Copy Date: 2026-09-13
 name: Branch Cleanup
 on:
   schedule:
