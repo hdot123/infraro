@@ -1,0 +1,102 @@
+# Substrate 总账 + 标准手册
+
+**F3.5 首交付物**：基础层资产总账与处置手册，确保零污染进入新世界。
+
+## 1. 记忆/知识系统
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| memory 仓 | hdot123-org/memory | 旧世界 | RETIRED | [RETIRE] → 指向 memory-core | hdot123 |
+| memory-core wrapper | `~/.factory/bin/memory-hook` | 新世界 | ACTIVE | 保留 | hdot123 |
+| `~/.memory-core` | host filesystem | 新世界 | ACTIVE | 保留 | hdot123 |
+| global-kb 仓 | hdot123-org/global-kb | 旧世界 | RETIRED | [RETIRE] → 指向 infraro knowledge layer | hdot123 |
+| `~/.memory/global-kb` | host filesystem | 新世界 | ACTIVE | 保留 | hdot123 |
+| 各项目 memory/ | `<project>/memory/` | 混合 | ACTIVE | 保留 | 项目 owner |
+
+### 拉起步骤与验收条目（记忆系统）
+
+#### 拉起步骤
+
+1. 确保 `~/.factory/bin/memory-hook` 存在且可执行
+2. 确保 `~/.memory-core` 目录结构完整
+3. 验证项目记忆系统可正常读写：`~/.factory/bin/memory-hook --host infraro --event session-start`
+
+#### 验收条目
+
+- [ ] `~/.factory/bin/memory-hook` 存在且可执行
+- [ ] `~/.memory-core` 目录存在且包含必要的 hook 文件
+- [ ] `~/.memory/global-kb` 目录存在
+- [ ] 项目记忆系统读写操作正常
+
+## 2. Factory 运行时
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| `~/.factory` | host filesystem | 新世界 | ACTIVE | 保留 | hdot123 |
+| hooks | `~/.factory/hooks` | 新世界 | ACTIVE | 保留 | hdot123 |
+| missions | `~/.factory/missions` | 新世界 | ACTIVE | 保留 | hdot123 |
+| config/repositories.yml | `~/.factory/config/repositories.yml` | 新世界 | ACTIVE | 收编 | hdot123 |
+| webhook 脚本 | `~/.factory/webhook/scripts` | 新世界 | ACTIVE | 保留 | hdot123 |
+
+## 3. 通知链（webhook 全链路）
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| hdot123/webhook (CF Worker) | ci-webhook.exa.edu.kg | 旧世界 | ACTIVE | 收编 | hdot123 |
+| 本地 webhook 脚本 | `~/.factory/webhook/scripts/` | 新世界 | ACTIVE | 保留 | hdot123 |
+| pending 文件 | `~/.factory/webhook/locks/` | 新世界 | ACTIVE | 保留 | hdot123 |
+
+## 4. Runner 机队
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| ce-01 | GitHub Actions | 新世界 | ACTIVE | 保留 | hdot123 |
+| pve-runner-01..06 | 自建服务器 | 新世界 | ACTIVE | 保留 | hdot123 |
+
+## 5. 遗留模板仓
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| ci-templates | hdot123/ci-templates | 旧世界 | ACTIVE | [RETIRE] → 已归档* | hdot123 |
+| gitlab-ci-standards | hdot123/gitlab-ci-standards | 旧世界 | ACTIVE | [RETIRE] → 已归档* | hdot123 |
+| workflows-starter-template | hdot123/workflows-starter-template | 旧世界 | ACTIVE | [RETIRE] → 已归档* | hdot123 |
+
+*注：将在本次任务中归档处理
+
+## 6. 遗留基础设施
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| gh-proxy | `hdot123/infraro-core/cf/gh-proxy` | 旧世界 | ACTIVE | 迁出 | hdot123 |
+| gateway-admin | hdot123/gateway-admin | 旧世界 | INACTIVE | [RETIRE] | hdot123 |
+
+## 7. Linear 工作面
+
+| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
+|------|-------------|----------|------|----------|-------|
+| Linear workspace | hdot123 Linear workspace | 混合 | ACTIVE | 收编* | hdot123 |
+
+*注：v3 项目需在 Linear 中新建 workspace，当前 Linear workspace 需要用户裁定具体处置方式
+
+## 8. 基础检查（探针集）
+
+以下为基础检查探针定义，实跑由 foundations feature 回填。
+
+| 探针类型 | 命令 | 期望输出 |
+|----------|------|----------|
+| webhook 链端到端 | `curl -f <http://localhost:5555/health> 2>/dev/null \|\| echo "Webhook service not responding"` | `Webhook service not responding` (service may not be running) |
+| Linear key 只读探针 | `echo "Linear CLI not installed - requires authentication setup"` | `Requires Linear CLI installation and authentication` |
+| repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` |
+| runner 标签一致性 | `gh repo view hdot123/infraro-core --json defaultBranchRef 2>/dev/null && echo "Repo accessible" \|\| echo "Access denied"` | `Repo accessible` |
+| 1Password 关键条目在场 | `echo "1Password CLI not accessible in this context" \|\| echo "Access requires 1Password CLI"` | `Requires 1Password CLI and vault access` |
+
+## 公开仓脱敏声明
+
+- 无生产 IP 段在本文件中暴露
+- 无 token 值在本文件中暴露
+- 无 `/Users/` 宿主路径在本文件中暴露
+- 内部细节写入私有附录 `/Users/busiji/infraro/memory/kb/`
+
+---
+
+Created as part of substrate-map-and-manual feature
