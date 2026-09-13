@@ -2,6 +2,11 @@ name: Auto Merge
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
+  workflow_run:
+    workflows: ["CI", "QA", "Droid Auto Review", "Evolution Governance"]
+    types: [completed]
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
   workflow_call:
     inputs:
       engine_ref:
@@ -16,6 +21,16 @@ on:
         required: false
         description: "hyphen 过渡变体（与 dispatch_token 等价；取值熔合 snake || hyphen，两步终态后删除）"
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  actions: read
+
+concurrency:
+  group: auto-merge-pipeline
+  cancel-in-progress: false
 
 jobs:
   auto-merge:
