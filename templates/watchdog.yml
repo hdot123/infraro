@@ -5,22 +5,58 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      engine_ref:
+      mode:
+        description: 'Handler to run: self-heal-rerun | cancel-on-ci-fail'
+        required: true
+        type: string
+      run_id:
+        description: '上游 workflow_run.id'
+        required: true
+        type: number
+      run-id:
+        description: 'hyphen 过渡变体（与 run_id 等价）'
+        required: false
+        type: number
+        default: 0
+      run_attempt:
+        description: '上游 workflow_run.run_attempt'
+        required: true
+        type: number
+      run-attempt:
+        description: 'hyphen 过渡变体（与 run_attempt 等价）'
+        required: false
+        type: number
+        default: 0
+      head_sha:
+        description: '上游 workflow_run.head_sha（cancel-on-ci-fail 用）'
         required: false
         type: string
-        description: "Engine ref to use"
-    secrets:
-      dispatch_token:
-        required: true
-        description: "PAT (hdot123) for issue/label writes and self-heal dispatch"
-      dispatch-token:
+        default: ''
+      head-sha:
+        description: 'hyphen 过渡变体（与 head_sha 等价）'
         required: false
-        description: "hyphen 过渡变体（与 dispatch_token 等价；env 层熔合 snake || hyphen）"
+        type: string
+        default: ''
+      max_attempt:
+        description: 'rerun 限界（caller 转发 vars.WATCHDOG_MAX_ATTEMPT；空时脚本回退 3）'
+        required: false
+        type: string
+        default: ''
+      max-attempt:
+        description: 'hyphen 过渡变体（与 max_attempt 等价）'
+        required: false
+        type: string
+        default: ''
 jobs:
   watchdog:
     uses: hdot123/infraro-core/.github/workflows/droid-review-watchdog-handlers.yml@v0.18.4
     with:
-      engine_ref: ${{ inputs.engine_ref }}
-    secrets:
-      dispatch_token: ${{ secrets.dispatch_token }}
-      dispatch-token: ${{ secrets['dispatch-token'] }}
+      mode: ${{ inputs.mode }}
+      run_id: ${{ inputs.run_id }}
+      run-id: ${{ inputs['run-id'] }}
+      run_attempt: ${{ inputs.run_attempt }}
+      run-attempt: ${{ inputs['run-attempt'] }}
+      head_sha: ${{ inputs.head_sha }}
+      head-sha: ${{ inputs['head-sha'] }}
+      max_attempt: ${{ inputs.max_attempt }}
+      max-attempt: ${{ inputs['max-attempt'] }}
