@@ -45,11 +45,15 @@ def scan() -> tuple[list[str], list[str]]:
             text = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
+        # Scanner self-references: gate-suite files are excluded wholesale
+        # (their pattern literals/docstrings match every rule; registered).
+        if rel.startswith(SELF_SCAN_PREFIX):
+            continue
+        if rel == "substrate/gate0-exemptions.md":
+            # The registry quotes stock verbatim by design; its rows ARE the
+            # registrations — scanning it would double-count itself.
+            continue
         for lineno, line in enumerate(text.splitlines(), 1):
-            if rel.startswith(SELF_SCAN_PREFIX) and (
-                "LOCAL_PATH_RE" in line or "/Users/" in line or "/home/" in line
-            ):
-                continue  # scanner self-reference (registered)
             for match in IP_RE.findall(line):
                 if any(match.startswith(prefix) for prefix in DOC_IPS):
                     continue
