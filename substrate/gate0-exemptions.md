@@ -12,6 +12,8 @@
 | Entry | Reason | Owner | Owning feature | Detail |
 |---|---|---|---|---|
 | `LICENSE` | static legal text | hdot123 | engine-substrate-boundary | 静态法律文本，无质量门域；随 boundary 画线裁定归属 |
+| `tools` | shellcheck/ruff advisory linters added (ci.yml advisory steps) | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
+| `scripts` | shellcheck/ruff advisory linters added (ci.yml advisory steps) | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
 
 ## Gate 1: registered interface stock（模板调用面存量）
 
@@ -26,11 +28,6 @@
 `substrate/gate0-exemptions.md` Gate 2 节（memory 冻结仓残留分支/在途 PR、
 repositories.yml 补登、ERROR_REPO_MAP 双侧一致性）。
 
-| Item | Kind | Owner | Owning feature | Detail |
-|---|---|---|---|---|
-| `in-flight OPEN PR #1275` | stock | hdot123 | legacy-repo-disposition | 冻结仓 memory 在途 PR（INFRA-1060；清剿时处置） |
-| `residual branch: fix/infra-1060-duplicate-make-git-repo` | stock | hdot123 | legacy-repo-disposition | 冻结仓 memory 未合并分支（首跑后新增，全域分支清剿时清） |
-
 ## Gate 3: exposure scan stock（敏感面存量 + 自引用排除）
 
 | Entry | Reason | Owner | Owning feature | Detail |
@@ -41,18 +38,11 @@ repositories.yml 补登、ERROR_REPO_MAP 双侧一致性）。
 Accepts（非暴露，不登记为存量）：`/Users/runner`、`/home/runner`（GitHub
 托管 runner 家目录）；`@users.noreply.github.com`/example 邮箱；RFC 5737
 文档 IP 段；prose 中「1Password」产品名词（暴露形态是 op:// 条目引用 URI，
-已按 op:// 形态扫描）。
-
-## Gate 0 Update (2026-09-14)
-
-| Entry | Reason | Owner | Owning feature | Detail |
-|---|---|---|---|---|
-| `tools` | shellcheck/ruff advisory linters added | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
-| `scripts` | shellcheck/ruff advisory linters added | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
+已按 op:// 形态扫描）.
 
 ## Gate 4
 
 断言编码与 bootstrap 一键拉起为引擎仓所有（`substrate/gates/
 gate4_timing_bootstrap.py` + `scripts/bootstrap-substrate.sh`）；声明仓侧
 仅经引擎门4 的 declaration-substrate-manual 检查项间接覆盖（substrate-map
-在场性），无独立存量。
+在场性），无独立存量.
