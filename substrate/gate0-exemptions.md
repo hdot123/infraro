@@ -12,8 +12,6 @@
 | Entry | Reason | Owner | Owning feature | Detail |
 |---|---|---|---|---|
 | `LICENSE` | static legal text | hdot123 | engine-substrate-boundary | 静态法律文本，无质量门域；随 boundary 画线裁定归属 |
-| `tools` | no dedicated linter | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 无 shellcheck/ruff 面；gate3 敏感扫描已覆盖；bookkeeping 裁定补扫或并入引擎扫描域 |
-| `scripts` | no dedicated linter | hdot123 | substrate-inventory-bookkeeping | 同上（gate3 已覆盖敏感面） |
 
 ## Gate 1: registered interface stock（模板调用面存量）
 
