@@ -1,43 +1,65 @@
 name: CI
+
 on:
-  pull_request:
-    branches: [main]
   push:
     branches: [main]
-  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  lint:
+  actionlint:
+    name: actionlint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run actionlint
-        uses: reviewdog/action-actionlint@v1
+      - uses: actions/checkout@v4
+      
+      - name: actionlint
+        uses: docker://rhysd/actionlint:1.7.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-check
-          level: error
+          args: -color
 
-      - name: Run markdownlint
-        uses: articulate/actions-markdownlint@v1
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: markdownlint
+        uses: articulate/markdownlint-cli@v1
         with:
-          files: .
           config: .markdownlint.json
 
-  ci-ok:
-    needs: [lint]
+  gate-tests:
+    name: substrate-gate-tests
     runs-on: ubuntu-latest
-    if: always()
     steps:
-      - name: Check lint job status
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
         run: |
-          lint_result="${{ needs.lint.result }}"
-          if [[ "$lint_result" == "success" ]]; then
-            echo "CI status: green"
-            exit 0
-          else
-            echo "CI status: red"
-            exit 1
-          fi
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Run Gate 0 - Coverage Completeness
+        run: python tests/test_gate_coverage_completeness.py
+
+      - name: Run Gate 1 - Interface Reality
+        run: python tests/test_gate_interface_reality.py
+
+      - name: Run Gate 2 - Cross-Repo Inspection
+        run: python tests/test_gate2_cross_repo_inspection.py
+
+      - name: Run Gate 3 - Public Exposure Scan
+        run: python tests/test_gate_public_exposure.py
+
+      - name: Run Gate 4 - Heat Start Assertion
+        run: python tests/test_gate4_heat_start_assertion.py
