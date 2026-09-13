@@ -20,7 +20,6 @@ This runbook provides instructions for registering self-hosted runners for indiv
 
 1. Ensure the runner uses the correct labels:
 
-
 ```text
 self-hosted
 pve-linux
@@ -50,7 +49,6 @@ After registration, verify that:
 ## Troubleshooting
 
 If a runner goes offline:
-
 1. Check network connectivity
 1. Verify the runner process is running
 1. Review runner logs for errors

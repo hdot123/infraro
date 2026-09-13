@@ -1,15 +1,12 @@
 # NOW.md
 
-
 ## Mission
 
 - {{MISSION}}
 
-
 ## Today
 
 - {{TODAY}}
-
 
 ## Next 3 Actions
 
@@ -17,8 +14,6 @@
 2. {{ACTION_2}}
 3. {{ACTION_3}}
 
-
 ## Blockers
 
 - {{BLOCKERS}}
-
