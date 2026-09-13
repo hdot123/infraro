@@ -50,7 +50,7 @@
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
-| ce-01 | GitHub Actions | 新世界 | ACTIVE | 保留 | hdot123 |
+| ce-01 | GitHub Actions | 新世界 | ACTIVE | 分阶段处置：公开期引擎 ubuntu-latest；引擎转私有仓后切 self-hosted,pve-linux（已记录在 runbook 迁移清单） | hdot123 |
 | pve-runner-01..06 | 自建服务器 | 新世界 | ACTIVE | 保留 | hdot123 |
 
 ## 5. 遗留模板仓
@@ -74,9 +74,7 @@
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
-| Linear workspace | hdot123 Linear workspace | 混合 | ACTIVE | 收编* | hdot123 |
-
-*注：v3 项目需在 Linear 中新建 workspace，当前 Linear workspace 需要用户裁定具体处置方式
+| Linear workspace | hdot123 Linear workspace | 混合 | ACTIVE | 新建 v3 项目 "infraro v3" (ID: 3c2927a2-6b8d-4dda-af6b-3cf27310952a)，旧项目 4b08a1b7 冻结零触碰 | hdot123 |
 
 ## 8. 基础检查（探针集）
 
