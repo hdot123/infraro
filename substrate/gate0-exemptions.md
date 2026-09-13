@@ -38,6 +38,13 @@ Accepts（非暴露，不登记为存量）：`/Users/runner`、`/home/runner`�
 文档 IP 段；prose 中「1Password」产品名词（暴露形态是 op:// 条目引用 URI，
 已按 op:// 形态扫描）。
 
+## Gate 0 Update (2026-09-14)
+
+| Entry | Reason | Owner | Owning feature | Detail |
+|---|---|---|---|---|
+| `tools` | shellcheck/ruff advisory linters added | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
+| `scripts` | shellcheck/ruff advisory linters added | hdot123 | substrate-inventory-bookkeeping | 声明仓 CI 已补 shellcheck/ruff advisory jobs（continue-on-error 形态） |
+
 ## Gate 4
 
 断言编码与 bootstrap 一键拉起为引擎仓所有（`substrate/gates/
