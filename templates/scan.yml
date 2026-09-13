@@ -1,0 +1,30 @@
+name: Scan
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_call:
+    inputs:
+      engine_ref:
+        required: false
+        type: string
+        description: "Engine ref to use"
+    secrets:
+      DISPATCH_TOKEN:
+        required: true
+jobs:
+  scan:
+    runs-on: [self-hosted, pve-linux]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install infraro engine
+        run: pip install git+https://github.com/hdot123/infraro-core.git@v0.18.4
+      
+      - name: Run scan
+        run: infraro scan --repo ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}

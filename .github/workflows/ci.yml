@@ -1,0 +1,41 @@
+name: CI
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run actionlint
+        uses: raven-actions/actionlint@v1
+        with:
+          args: -color
+
+      - name: Run markdownlint
+        uses: articulate/actions-markdownlint@v1
+        with:
+          files: .
+          config: .markdownlint.json
+
+  ci-ok:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check lint job status
+        run: |
+          lint_result="${{ needs.lint.result }}"
+          if [[ "$lint_result" == "success" ]]; then
+            echo "CI status: green"
+            exit 0
+          else
+            echo "CI status: red"
+            exit 1
+          fi
