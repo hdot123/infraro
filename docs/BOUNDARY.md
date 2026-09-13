@@ -25,21 +25,25 @@
 The following are explicitly denied or excluded from the infraro system:
 
 ### Proxy Packages (Denied)
+
 - Internal proxy solutions
 - HTTP tunneling through internal services
 - Custom proxy implementations
 
 ### Forwarding Packages (Denied)  
+
 - Request forwarding mechanisms
 - API gateway forwarding
 - Traffic redirection packages
 
 ### Internal Gateways (Denied)
+
 - Legacy internal gateway systems
 - VPN-based access patterns
 - Tailnet-only service discovery
 
 ### Other Prohibited Components:
+
 - Direct database connections to internal systems
 - Hardcoded internal IP addresses
 - Non-public API endpoints

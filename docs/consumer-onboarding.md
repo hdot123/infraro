@@ -31,6 +31,7 @@ For self-hosted runner registration, use the per-repository format:
 ```
 
 The runner should use the following labels:
+
 - `self-hosted`
 - `pve-linux`
 
@@ -39,6 +40,7 @@ The runner should use the following labels:
 Use the provided workflow templates from the declaration repository. All templates use the `uses@tag` anchor discipline (full anchor with engine=workflow=same tag), prohibiting `@main` usage.
 
 Templates available:
+
 - scan.yml
 - heartbeat.yml
 - governance.yml
@@ -50,6 +52,7 @@ Templates available:
 ## Naming Contracts
 
 The system follows fixed naming contracts that are cross-stack stable:
+
 - Workflow name: `CI`
 - Job key: `ci-ok`
 - Job key: `qa-ok`
@@ -60,12 +63,14 @@ The system follows fixed naming contracts that are cross-stack stable:
 Use snake-only single形态 for secrets (v2-F2 birth-to-terminal state):
 
 ✅ Correct:
+
 ```yaml
 secrets:
   dispatch_token: ${{ secrets.DISPATCH_TOKEN }}
 ```
 
 ❌ Incorrect:
+
 ```yaml
 secrets:
   DISPATCH-TOKEN: ${{ secrets.DISPATCH_TOKEN }}  # Do not use hyphens
@@ -86,6 +91,7 @@ Follow the per-repository base template for repository settings:
 - `hdot123-org/infra-core` = Frozen maintenance, backward compatibility
 
 The following capabilities are not migratable:
+
 - Internal proxy packages
 - Forwarding packages
 - Legacy internal gateways

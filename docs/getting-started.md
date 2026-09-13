@@ -5,6 +5,7 @@ Welcome to infraro, the public declaration layer for the evolution engine system
 ## Overview
 
 infraro provides:
+
 - Rule package specifications
 - Consumer onboarding guides  
 - Workflow templates
