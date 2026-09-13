@@ -20,8 +20,6 @@
 | Template | Break | Owner | Owning feature | Detail |
 |---|---|---|---|---|
 | `watchdog.yml` | per-key | hdot123 | declaration-template-interface-fix | 传未声明键 engine_ref + 未声明 secrets dispatch_token/dispatch-token + 缺必填 mode/run_id/run_attempt（run 级 startup_failure） |
-| `droid-review.yml` | per-key | hdot123 | declaration-template-interface-fix | 必填 secret FACTORY_API_KEY 从不到达引擎 shards（零 secrets 转发） |
-| `governance.yml` | per-key | hdot123 | declaration-template-interface-fix | 缺 composite action 必填输入 protected-patterns |
 
 ## Gate 2: cross-repo inspection stock
 
