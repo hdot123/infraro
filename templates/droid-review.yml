@@ -8,6 +8,70 @@ on:
         required: false
         type: string
         description: "Engine ref to use"
+      engine-ref:
+        required: false
+        type: string
+        description: "hyphen 过渡变体（与 engine_ref 等价）"
+      pr_number:
+        description: 'PR number (workflow_dispatch passthrough; empty for pull_request_target)'
+        required: false
+        type: string
+        default: ''
+      pr-number:
+        description: 'hyphen 过渡变体（与 pr_number 等价）'
+        required: false
+        type: string
+        default: ''
+      head_sha:
+        description: 'Head SHA override (workflow_dispatch passthrough)'
+        required: false
+        type: string
+        default: ''
+      head-sha:
+        description: 'hyphen 过渡变体（与 head_sha 等价）'
+        required: false
+        type: string
+        default: ''
+      shard_max_files:
+        description: 'Layer 3: shard size cap in files (caller 转发 vars.SHARD_MAX_FILES)'
+        required: false
+        type: string
+        default: '25'
+      shard-max-files:
+        description: 'hyphen 过渡变体（与 shard_max_files 等价）'
+        required: false
+        type: string
+        default: ''
+      shard_max_count:
+        description: 'Layer 3: shard count cap (caller 转发 vars.SHARD_MAX_COUNT)'
+        required: false
+        type: string
+        default: '6'
+      shard-max-count:
+        description: 'hyphen 过渡变体（与 shard_max_count 等价）'
+        required: false
+        type: string
+        default: ''
+      shard_timeout_minutes:
+        description: 'Layer 1: shard job timeout in minutes (caller 转发 vars.SHARD_TIMEOUT_MINUTES)'
+        required: false
+        type: string
+        default: '45'
+      shard-timeout-minutes:
+        description: 'hyphen 过渡变体（与 shard_timeout_minutes 等价）'
+        required: false
+        type: string
+        default: ''
+      shard_max_parallel:
+        description: 'Layer 4: matrix concurrency cap (caller 转发 vars.SHARD_MAX_PARALLEL)'
+        required: false
+        type: string
+        default: '3'
+      shard-max-parallel:
+        description: 'hyphen 过渡变体（与 shard_max_parallel 等价）'
+        required: false
+        type: string
+        default: ''
     secrets:
       factory_api_key:
         required: true
@@ -36,3 +100,21 @@ concurrency:
 jobs:
   droid-auto-review:
     uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.4
+    with:
+      engine_ref: ${{ inputs.engine_ref }}
+      engine-ref: ${{ inputs['engine-ref'] }}
+      pr_number: ${{ inputs.pr_number }}
+      pr-number: ${{ inputs['pr-number'] }}
+      head_sha: ${{ inputs.head_sha }}
+      head-sha: ${{ inputs['head-sha'] }}
+      shard_max_files: ${{ inputs.shard_max_files }}
+      shard-max-files: ${{ inputs['shard-max-files'] }}
+      shard_max_count: ${{ inputs.shard_max_count }}
+      shard-max-count: ${{ inputs['shard-max-count'] }}
+      shard_timeout_minutes: ${{ inputs.shard_timeout_minutes }}
+      shard-timeout-minutes: ${{ inputs['shard-timeout-minutes'] }}
+      shard_max_parallel: ${{ inputs.shard_max_parallel }}
+      shard-max-parallel: ${{ inputs['shard-max-parallel'] }}
+    secrets:
+      FACTORY_API_KEY: ${{ secrets.factory_api_key || secrets.FACTORY_API_KEY }}
+      NVIDIA_KONG_PROXY_KEY: ${{ secrets.nvidia_kong_proxy_key || secrets.NVIDIA_KONG_PROXY_KEY }}
