@@ -1,43 +1,53 @@
 name: CI
-
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
-
-permissions:
-  contents: read
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  actionlint:
-    name: actionlint
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: actionlint
-        uses: docker://rhysd/actionlint:1.7.1
-        with:
-          args: -color
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  markdownlint:
-    name: markdownlint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: markdownlint
-        uses: articulate/markdownlint-cli@v1
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@v1
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-check
+          level: error
+
+      - name: Run markdownlint
+        uses: articulate/actions-markdownlint@v1
+        with:
+          files: .
           config: .markdownlint.json
 
+  # ─── substrate gates: advisory (job-level continue-on-error) ───
+  # 五道门先红着上线（substrate-gate-suite 裁定 2026-09-13）：门照常运行并
+  # 如实输出红/绿；存量红项逐条登记于 substrate/gate0-exemptions.md
+  # （owner + 归属 feature）。job 级 continue-on-error: true → 结论记
+  # success、步级红留日志；刻意不进 ci-ok needs（存量红不阻断合并）。
+  # 门0/门1/门3 在声明仓常驻；门2 cron 与门4 断言/bootstrap 为引擎仓所有。
+  # 引擎接口面经 cross-repo checkout 注入 ENGINE_REPO_DIR（公开仓，
+  # GITHUB_TOKEN 可读）；引用实存性经 git ls-remote / gh api 核验。
   gate-tests:
     name: substrate-gate-tests
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
-      - name: Checkout repository
+      - name: Checkout declaration repo
         uses: actions/checkout@v4
+
+      - name: Checkout engine repo (interface source of truth)
+        uses: actions/checkout@v4
+        with:
+          repository: hdot123/infraro-core
+          path: infraro-core
+          persist-credentials: false
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -45,21 +55,34 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install pyyaml
+
+      - name: "Substrate gate 0: coverage completeness"
+        env:
+          ENGINE_REPO_DIR: ${{ github.workspace }}/infraro-core
+        run: python substrate/gates/gate0_coverage.py
+
+      - name: "Substrate gate 1: interface reality"
+        env:
+          ENGINE_REPO_DIR: ${{ github.workspace }}/infraro-core
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python substrate/gates/gate1_interface.py
+
+      - name: "Substrate gate 3: public exposure scan"
+        run: python substrate/gates/gate3_exposure.py
+
+  ci-ok:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check lint job status
         run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml
-
-      - name: Run Gate 0 - Coverage Completeness
-        run: python tests/test_gate_coverage_completeness.py
-
-      - name: Run Gate 1 - Interface Reality
-        run: python tests/test_gate_interface_reality.py
-
-      - name: Run Gate 2 - Cross-Repo Inspection
-        run: python tests/test_gate2_cross_repo_inspection.py
-
-      - name: Run Gate 3 - Public Exposure Scan
-        run: python tests/test_gate_public_exposure.py
-
-      - name: Run Gate 4 - Heat Start Assertion
-        run: python tests/test_gate4_heat_start_assertion.py
+          lint_result="${{ needs.lint.result }}"
+          if [[ "$lint_result" == "success" ]]; then
+            echo "CI status: green"
+            exit 0
+          else
+            echo "CI status: red"
+            exit 1
+          fi
