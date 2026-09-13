@@ -35,4 +35,4 @@ concurrency:
 
 jobs:
   droid-auto-review:
-    uses: hdot123/infraro-core/.github/workflows/droid-review.yml@v0.18.4
+    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.4
