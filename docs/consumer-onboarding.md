@@ -52,7 +52,7 @@ Add the following secrets to your repository:
 All infraro-related workflows follow standardized naming:
 
 - CI workflows: `CI`
-- OK status indicators: `ci-ok`, `qa-ok` 
+- OK status indicators: `ci-ok`, `qa-ok`
 - Gate workflows: `gate/*`
 
 ## Security & Compliance
