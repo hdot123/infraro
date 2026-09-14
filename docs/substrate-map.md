@@ -86,7 +86,7 @@
 | Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | ✅ PASS |
 | repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | ✅ PASS |
 | runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" <generic-repo-check>/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | ⚠️ TRANSITION |
-| 1Password 关键条目在场 | `1password MCP check` | `vault sever accessible` | ✅ PASS |
+| 1Password 关键条目在场 | `1password MCP check` | `vault sever (ozqqpvh5yvvxvyu64npq62a3ti) item "ai.exa.edu.kg / NVIDIA Kong Proxy Key" (sjn2lq3ggpge4cyj46owrg7kmq) credential field accessible` | ✅ PASS |
 
 ## 公开仓脱敏声明
 
