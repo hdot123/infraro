@@ -31,7 +31,7 @@ repositories.yml 补登、ERROR_REPO_MAP 双侧一致性）。
 
 | Entry | Reason | Owner | Owning feature | Detail |
 |---|---|---|---|---|
-| `docs/substrate-map.md:96 local-path` | stock | hdot123 | substrate-inventory-bookkeeping | 手册「公开仓脱敏声明」自述无 /Users/ 路径但下一行暴露私有附录宿主路径；改相对引用 `memory/kb/` |
+| `/Users/busiji` | stock | hdot123 | substrate-inventory-bookkeeping | 手册「公开仓脱敏声明」自述无 /Users/ 路径但下一行暴露私有附录宿主路径；改相对引用 `memory/kb/` |
 | `substrate/gates/（扫描器自引用）` | self-reference | hdot123 | substrate-gate-suite（本 suite 自有） | 门套件自身正则字面量含 /Users/、/home/ 扫描模式；对 substrate/gates/ 自引用行显式排除，此处登记备案 |
 
 Accepts（非暴露，不登记为存量）：`/Users/runner`、`/home/runner`（GitHub
