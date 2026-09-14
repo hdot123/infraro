@@ -93,9 +93,9 @@
 
 #### Runner 机队验收条目
 
-- [ ] ce-01 runner 在 GitHub Actions 中可用（`gh api repos/hdot123/infraro-core/actions/runners`）
-- [ ] 自建服务器 runners 可正常接收任务
-- [ ] runners 标签正确（self-hosted, pve-linux）
+- [ ] 引擎公开期 CI 用 hosted runner 口径（自声明仓克隆根执行）：`grep -n "runs-on: ubuntu-latest" ../infraro-core/.github/workflows/ci.yml`（实测 :46/:97/:218 命中）
+- [ ] 消费仓 self-hosted runners（F4 注册后验收，当前不执行）：`gh api repos/hdot123/<consumer>/actions/runners --jq .total_count`（≥1 为通过；F4 前无消费仓。勿对引擎仓执行——其 runners API 为 hosted-only，total_count=0 属实测口径）
+- [ ] Runners have correct labels (self-hosted, pve-linux)
 - [ ] 分阶段策略正确实施（公开期使用 ubuntu-latest，私有后切换）
 
 ## 5. 遗留模板仓 (ARCHIVED)
@@ -117,14 +117,25 @@
 
 #### 遗留基础设施拉起步骤
 
-1. 确认 gh-proxy 迁出计划
-2. 验证 gateway-admin 已废弃
+1. 仓内真源：引擎仓 `cf/gh-proxy/DEPLOYMENT.md` 与 `cf/gh-proxy/wrangler.toml`（部署细节以二者为准，本节为其摘要）
+2. 在引擎仓克隆根进入目录：`cd cf/gh-proxy`
+3. 部署 Worker（需先设置 Cloudflare API Token）：`npx wrangler deploy`
+4. 设置环境变量和 secrets：
+
+   ```bash
+   printf 'value-from-1password' | npx wrangler secret put PROXY_KEY
+   printf 'ghp_xxxx' | npx wrangler secret put GH_PRIVATE_PAT
+   ```
+
+5. 验证 gateway-admin 已废弃
 
 #### 遗留基础设施验收条目
 
-- [ ] gh-proxy 迁出计划制定完成
-- [ ] gateway-admin 不再活动
-- [ ] 无对 gateway-admin 的依赖残留
+- [ ] Cloudflare Worker gh-proxy successfully deployed
+- [ ] PROXY_KEY and GH_PRIVATE_PAT secrets properly set
+- [ ] Worker accessible at configured custom domain
+- [ ] gateway-admin no longer active
+- [ ] Test requests succeed: `curl -H "x-proxy-key: $PROXY_KEY" "https://gh.qqbaidu.de5.net/https://github.com/actions/checkout"`
 
 ## 7. Linear 工作面
 
@@ -137,11 +148,18 @@
 | 团队/项目 | 世代分类 | 活跃状态 | 处置结论 |
 |----------|----------|----------|----------|
 | INFRA team | 旧世界 | 活跃 | 保持运营 |
-| DEFAULT team | 旧世界 | 活跃 | 保持运营 |
+| DEFAULT team | 旧世界 | 部分取消 | 9个已取消项目，保持运营 |
 | WORKBOT team | 旧世界 | 活跃 | 保持运营 |
+| GW team | 旧世界 | 活跃 | 保持运营 |
+| TES team | 测试演示 | 活跃 | 保持运营 |
+| 优志愿(YZ) team | 业务 | 活跃 | 按业务状态管理 |
+| 教学(JX) team | 业务 | 活跃 | 按业务状态管理 |
+| 题库(TIKU) team | 业务 | 活跃 | 按业务状态管理 |
 | infra-core 项目 | 旧世界 | 活跃（冻结） | 冻结零触碰 |
 | infraro v3 项目 | 新世界 | 活跃 | 新项目持续运营 |
-| 优志愿/教学/题库等 | 旧世界 | 部分取消 | 按业务状态管理 |
+| youzy 项目 | 业务 | 活跃 | 按业务状态管理 |
+| jiaoxue 项目 | 业务 | 活跃 | 按业务状态管理 |
+| tiku 项目 | 业务 | 活跃 | 按业务状态管理 |
 
 ### Linear 引擎仓变量验证
 
@@ -171,12 +189,12 @@
 
 | 探针类型 | 命令 | 实际输出 | 期望输出 | 状态 |
 |----------|------|----------|----------|------|
-| webhook 链端到端 | `curl -s -o /dev/null -w "%{http_code}" <https://ci-webhook.exa.edu.kg/health>` | `502` | `200` | ⚠️ 502 (2026-09-13 探针时点状态) |
+| webhook 链端到端 | `curl -s -o /dev/null -w "%{http_code}" <https://ci-webhook.exa.edu.kg/health>` | `000（2026-09-14 复测：连接超时 exit 28；2026-09-13 时点为 502）` | `200` | ⚠️ 持续不可达（恢复侧证据：gate2 cron 成功 run；已列待用户项） |
 | Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | `Valid project response with matching ID` | ✅ PASS |
 | repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | `Found` | ✅ PASS |
-| runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" <generic-repo-check>/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | 分阶段策略验证通过 | ⚠️ TRANSITION |
-| 1Password 关键条目在场 | `1password MCP check` | `sever vault item "ai.exa.edu.kg / NVIDIA Kong Proxy Key" credential field accessible` | `Valid access to required items` | ✅ PASS |
-| Worker secrets 存在性 | 1Password 条目检索（CF Worker / <名> / webhook 命名约定） | POSTHOG_TOKEN 条目 found, others missing | All 6 items available | ❌ BLOCKED (无 CF API token；实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash) |
+| runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" ../infraro-core/.github/workflows/auto-merge-pipeline.yml`（自声明仓克隆根执行，引擎克隆为同级目录） | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | 分阶段策略验证通过 | ⚠️ TRANSITION |
+| 1Password 关键条目在场 | `1password-connect___search_items vault=sever query="ai.exa.edu.kg / NVIDIA Kong Proxy"`（MCP 规范工具名形态，validator 经 MCP 执行；名称级在场性，不取值） | `sever vault 条目 "ai.exa.edu.kg / NVIDIA Kong Proxy Key" 命中` | `Valid access to required items` | ✅ PASS |
+| Worker secrets 存在性 | `1password-connect___search_items vault=sever query="CF Worker / POSTHOG_TOKEN"`（MCP 规范工具名形态；逐名结果见 §9 表） | POSTHOG_TOKEN 条目 found, others missing | All 6 items available | ❌ BLOCKED (无 CF API token；实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash) |
 
 ## 9. Worker Secrets 验证
 
@@ -223,6 +241,11 @@
 - 在场条目数：1 (POSTHOG_TOKEN)
 - 缺失条目数：5
 - CF Worker 实面核验：BLOCKED
+
+### 冻结常量脚注
+
+- ERROR_REPO_DEFAULT: 默认错误仓库配置常量
+- EXECUTOR_HOST_REPO: 执行器主机仓库标识常量
 
 ## 公开仓脱敏声明
 
