@@ -93,9 +93,9 @@
 
 #### Runner 机队验收条目
 
-- [ ] ce-01 runner 在 GitHub Actions 中可用（`gh api repos/hdot123/infraro-core/actions/runners`）
-- [ ] 自建服务器 runners 可正常接收任务
-- [ ] runners 标签正确（self-hosted, pve-linux）
+- [ ] Engine CI uses ubuntu-latest (public repo restriction): `gh api repos/hdot123/infraro-core/actions/runs --jq '.workflow_runs[] | select(.name == "CI") | .runner_environment' | grep -q "hosted"`
+- [ ] Consumer repos use self-hosted runners when registered: `gh api repos/hdot123/consumer-a/actions/runners --jq '.total_count' | grep -q "^[1-9][0-9]*$"`
+- [ ] Runners have correct labels (self-hosted, pve-linux)
 - [ ] 分阶段策略正确实施（公开期使用 ubuntu-latest，私有后切换）
 
 ## 5. 遗留模板仓 (ARCHIVED)
@@ -117,14 +117,22 @@
 
 #### 遗留基础设施拉起步骤
 
-1. 确认 gh-proxy 迁出计划
-2. 验证 gateway-admin 已废弃
+1. 进入 engine 仓库的 cf/gh-proxy 目录：`cd /Users/busiji/infraro-core/cf/gh-proxy`
+2. 部署 Worker（需先设置 Cloudflare API Token）：`npx wrangler deploy`
+3. 设置环境变量和 secrets：
+   ```bash
+   printf 'value-from-1password' | npx wrangler secret put PROXY_KEY
+   printf 'ghp_xxxx' | npx wrangler secret put GH_PRIVATE_PAT
+   ```
+4. 验证 gateway-admin 已废弃
 
 #### 遗留基础设施验收条目
 
-- [ ] gh-proxy 迁出计划制定完成
-- [ ] gateway-admin 不再活动
-- [ ] 无对 gateway-admin 的依赖残留
+- [ ] Cloudflare Worker gh-proxy successfully deployed
+- [ ] PROXY_KEY and GH_PRIVATE_PAT secrets properly set
+- [ ] Worker accessible at configured custom domain
+- [ ] gateway-admin no longer active
+- [ ] Test requests succeed: `curl -H "x-proxy-key: $PROXY_KEY" "https://gh.qqbaidu.de5.net/https://github.com/actions/checkout"`
 
 ## 7. Linear 工作面
 
@@ -137,11 +145,16 @@
 | 团队/项目 | 世代分类 | 活跃状态 | 处置结论 |
 |----------|----------|----------|----------|
 | INFRA team | 旧世界 | 活跃 | 保持运营 |
-| DEFAULT team | 旧世界 | 活跃 | 保持运营 |
+| DEFAULT team | 旧世界 | 部分取消 | 9个已取消项目，保持运营 |
 | WORKBOT team | 旧世界 | 活跃 | 保持运营 |
+| GW team | 旧世界 | 活跃 | 保持运营 |
+| TES team | 测试演示 | 活跃 | 保持运营 |
+| 优志愿(YZ) team | 业务 | 活跃 | 按业务状态管理 |
+| 教学(JX) team | 业务 | 活跃 | 按业务状态管理 |
+| 题库(TIKU) team | 业务 | 活跃 | 按业务状态管理 |
 | infra-core 项目 | 旧世界 | 活跃（冻结） | 冻结零触碰 |
 | infraro v3 项目 | 新世界 | 活跃 | 新项目持续运营 |
-| 优志愿/教学/题库等 | 旧世界 | 部分取消 | 按业务状态管理 |
+| youzy/jiaoxue/tiku 项目 | 业务 | 活跃 | 按业务状态管理 |
 
 ### Linear 引擎仓变量验证
 
@@ -174,9 +187,9 @@
 | webhook 链端到端 | `curl -s -o /dev/null -w "%{http_code}" <https://ci-webhook.exa.edu.kg/health>` | `502` | `200` | ⚠️ 502 (2026-09-13 探针时点状态) |
 | Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | `Valid project response with matching ID` | ✅ PASS |
 | repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | `Found` | ✅ PASS |
-| runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" <generic-repo-check>/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | 分阶段策略验证通过 | ⚠️ TRANSITION |
-| 1Password 关键条目在场 | `1password MCP check` | `sever vault item "ai.exa.edu.kg / NVIDIA Kong Proxy Key" credential field accessible` | `Valid access to required items` | ✅ PASS |
-| Worker secrets 存在性 | 1Password 条目检索（CF Worker / <名> / webhook 命名约定） | POSTHOG_TOKEN 条目 found, others missing | All 6 items available | ❌ BLOCKED (无 CF API token；实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash) |
+| runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" /Users/busiji/infraro-core/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | 分阶段策略验证通过 | ⚠️ TRANSITION |
+| 1Password 关键条目在场 | `1password-connect get_item --vault sever --item "ai.exa.edu.kg / NVIDIA Kong Proxy Key"` | `sever vault item "ai.exa.edu.kg / NVIDIA Kong Proxy Key" credential field accessible` | `Valid access to required items` | ✅ PASS |
+| Worker secrets 存在性 | `1password-connect list_items --vault sever \| grep -i "CF Worker"` | POSTHOG_TOKEN 条目 found, others missing | All 6 items available | ❌ BLOCKED (无 CF API token；实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash) |
 
 ## 9. Worker Secrets 验证
 
@@ -223,6 +236,11 @@
 - 在场条目数：1 (POSTHOG_TOKEN)
 - 缺失条目数：5
 - CF Worker 实面核验：BLOCKED
+
+### 冻结常量脚注
+
+- ERROR_REPO_DEFAULT: 默认错误仓库配置常量
+- EXECUTOR_HOST_REPO: 执行器主机仓库标识常量
 
 ## 公开仓脱敏声明
 
