@@ -19,7 +19,7 @@ The engine can be installed anonymously without requiring any private tokens:
 pip install git+https://github.com/hdot123/infraro-core.git@v0.18.4
 ```
 
-**Note**: This is a public repository that can be accessed anonymously. No ORG_READ_TOKEN, engine_read_token, or 1Password credentials are required.
+**Note**: This is a public repository that can be accessed anonymously. No legacy tokens or credential rotation tools are required.
 
 ## Runner Registration
 
