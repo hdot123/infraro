@@ -15,13 +15,13 @@
 
 ### 拉起步骤与验收条目（记忆系统）
 
-#### 拉起步骤
+#### 记忆系统拉起步骤
 
 1. 确保 `~/.factory/bin/memory-hook` 存在且可执行
 2. 确保 `~/.memory-core` 目录结构完整
 3. 验证项目记忆系统可正常读写：`~/.factory/bin/memory-hook --host infraro --event session-start`
 
-#### 验收条目
+#### 记忆系统验收条目
 
 - [ ] `~/.factory/bin/memory-hook` 存在且可执行
 - [ ] `~/.memory-core` 目录存在且包含必要的 hook 文件
@@ -40,13 +40,13 @@
 
 ### 拉起步骤与验收条目（Factory 运行时）
 
-#### 拉起步骤
+#### Factory 运行时拉起步骤
 
 1. 确保 `~/.factory` 目录结构完整
 2. 确保 hooks 在 `~/.factory/hooks` 中可用
 3. 验证 mission 系统可正常运行：`droid exec --skill mission-worker-base`
 
-#### 验收条目
+#### Factory 运行时验收条目
 
 - [ ] `~/.factory` 目录存在
 - [ ] `~/.factory/hooks` 目录存在且包含 hook 脚本
@@ -64,13 +64,13 @@
 
 ### 拉起步骤与验收条目（通知链）
 
-#### 拉起步骤
+#### 通知链拉起步骤
 
 1. 确保 CF Worker (ci-webhook.exa.edu.kg) 可访问
 2. 验证本地 webhook 脚本存在且可执行
 3. 验证 locks 目录存在且可写
 
-#### 验收条目
+#### 通知链验收条目
 
 - [ ] CF Worker 服务可访问（curl -s -o /dev/null -w "%{http_code}" https://ci-webhook.exa.edu.kg/health）
 - [ ] `~/.factory/webhook/scripts` 目录存在且脚本可执行
@@ -86,12 +86,12 @@
 
 ### 拉起步骤与验收条目（Runner 机队）
 
-#### 拉起步骤
+#### Runner 机队拉起步骤
 
 1. 验证 ce-01 runner 在 GitHub Actions 中注册
 2. 验证自建服务器 runners pve-runner-01..06 运行正常
 
-#### 验收条目
+#### Runner 机队验收条目
 
 - [ ] ce-01 runner 在 GitHub Actions 中可用（`gh api repos/hdot123/infraro-core/actions/runners`）
 - [ ] 自建服务器 runners 可正常接收任务
@@ -148,12 +148,12 @@
 
 ### 拉起步骤与验收条目（遗留基础设施）
 
-#### 拉起步骤
+#### 遗留基础设施拉起步骤
 
 1. 确认 gh-proxy 迁出计划
 2. 验证 gateway-admin 已废弃
 
-#### 验收条目
+#### 遗留基础设施验收条目
 
 - [ ] gh-proxy 迁出计划制定完成
 - [ ] gateway-admin 不再活动
@@ -185,13 +185,13 @@
 
 ### 拉起步骤与验收条目（Linear）
 
-#### 拉起步骤
+#### Linear 拉起步骤
 
 1. 验证 Linear 连接器可用性
 2. 检查项目和团队状态
 3. 验证变量配置正确
 
-#### 验收条目
+#### Linear 验收条目
 
 - [ ] Linear 连接器可正常访问
 - [ ] infraro v3 项目存在且 ID 为 3c2927a2-6b8d-4dda-af6b-3cf27310952a
@@ -211,7 +211,7 @@
 
 | 探针类型 | 命令 | 实际输出 | 期望输出 | 状态 |
 |----------|------|----------|----------|------|
-| webhook 链端到端 | `curl -s -o /dev/null -w "%{http_code}" https://ci-webhook.exa.edu.kg/health` | `502` | `200` | ⚠️ 502 (2026-09-13 探针时点状态) |
+| webhook 链端到端 | `curl -s -o /dev/null -w "%{http_code}" <https://ci-webhook.exa.edu.kg/health>` | `502` | `200` | ⚠️ 502 (2026-09-13 探针时点状态) |
 | Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | `Valid project response with matching ID` | ✅ PASS |
 | repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | `Found` | ✅ PASS |
 | runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" <generic-repo-check>/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | 分阶段策略验证通过 | ⚠️ TRANSITION |
