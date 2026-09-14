@@ -86,12 +86,39 @@
 | Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | ✅ PASS |
 | repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | ✅ PASS |
 | runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" <generic-repo-check>/.github/workflows/auto-merge-pipeline.yml` | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | ⚠️ TRANSITION |
-| 1Password 关键条目在场 | `1password MCP check` | `vault sever (ozqqpvh5yvvxvyu64npq62a3ti) item "ai.exa.edu.kg / NVIDIA Kong Proxy Key" (sjn2lq3ggpge4cyj46owrg7kmq) credential field accessible` | ✅ PASS |
+| 1Password 关键条目在场 | `1password MCP check` | `sever vault item "ai.exa.edu.kg / NVIDIA Kong Proxy Key" credential field accessible` | ✅ PASS |
+| Worker secrets 存在性 | 1Password 条目检索（CF Worker / <名> / webhook 命名约定） | POSTHOG_TOKEN 条目 found, others missing | ❌ BLOCKED (无 CF API token；实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash) |
+
+## 9. Worker Secrets 验证
+
+以下为 CF Worker secrets 约定条目在场性验证结果（1Password 条目检索）：
+
+| Secret 名 | 在场性 | 1Password 条目名 | 备注 | 验证时间 |
+|----------|--------|------------------|------|----------|
+| CI_TOKEN | 缺失 | 未找到匹配条目 | 未在 vault sever 中找到约定条目 | 2026-09-14 |
+| GITHUB_WEBHOOK_SECRET | 缺失 | 未找到匹配条目 | 未在 vault sever 中找到约定条目 | 2026-09-14 |
+| LINEAR_WEBHOOK_TOKEN | 缺失 | 未找到匹配条目 | 未在 vault sever 中找到约定条目 (Linear API tokens exist but not webhook-specific) | 2026-09-14 |
+| POSTHOG_CAPTURE_KEY | 缺失 | 未找到匹配条目 | 未在 vault sever 中找到约定条目 | 2026-09-14 |
+| POSTHOG_TOKEN | 在场 | CF Worker / POSTHOG_TOKEN / webhook (ci-webhook.exa.edu.kg) | 约定条目存在 | 2026-09-14 |
+| WIKI_TOKEN | 缺失 | 未找到匹配条目 | 未在 vault sever 中找到约定条目 | 2026-09-14 |
+
+### CF Worker 实面核验状态
+
+❌ BLOCKED - 无 CF API token 条目在 vault sever 中。实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash。
+
+### 约定条目统计
+
+- 约定条目总数：6
+- 在场条目数：1 (POSTHOG_TOKEN)
+- 缺失条目数：5
+- CF Worker 实面核验：BLOCKED
 
 ## 公开仓脱敏声明
 
 - 无生产 IP 段在本文件中暴露
 - 无 token 值在本文件中暴露
+- 无 1Password 条目 ID 在本文件中暴露
+- 无 vault ID 在本文件中暴露
 - 无 `/Users/` 宿主路径在本文件中暴露
 - 内部细节写入私有附录 `/Users/busiji/infraro/memory/kb/`
 
