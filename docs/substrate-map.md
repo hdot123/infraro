@@ -2,7 +2,7 @@
 
 **F3.5 首交付物**：基础层资产总账与处置手册，确保零污染进入新世界。
 
-## 1. 记忆/知识系统
+## 1. 记忆/知识系统 (ACTIVE)
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
@@ -28,7 +28,7 @@
 - [ ] `~/.memory/global-kb` 目录存在
 - [ ] 项目记忆系统读写操作正常
 
-## 2. Factory 运行时
+## 2. Factory 运行时 (ACTIVE)
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
@@ -54,7 +54,7 @@
 - [ ] webhook 脚本可执行
 - [ ] Mission 系统可正常启动和运行
 
-## 3. 通知链（webhook 全链路）
+## 3. 通知链（webhook 全链路 - ACTIVE）
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
@@ -72,12 +72,12 @@
 
 #### 通知链验收条目
 
-- [ ] CF Worker 服务可访问（curl -s -o /dev/null -w "%{http_code}" https://ci-webhook.exa.edu.kg/health）
+- [ ] CF Worker 服务可访问（curl -s -o /dev/null -w "%{http_code}" <https://ci-webhook.exa.edu.kg/health>）
 - [ ] `~/.factory/webhook/scripts` 目录存在且脚本可执行
 - [ ] `~/.factory/webhook/locks/` 目录存在且可写
 - [ ] webhook 脚本功能正常（pending-ci registration/delivery）
 
-## 4. Runner 机队
+## 4. Runner 机队 (ACTIVE)
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
@@ -98,7 +98,7 @@
 - [ ] runners 标签正确（self-hosted, pve-linux）
 - [ ] 分阶段策略正确实施（公开期使用 ubuntu-latest，私有后切换）
 
-## 5. 遗留模板仓
+## 5. 遗留模板仓 (ARCHIVED)
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
@@ -106,40 +106,7 @@
 | gitlab-ci-standards | hdot123/gitlab-ci-standards | 旧世界 | ARCHIVED | [RETIRE] → 已归档 | hdot123 |
 | workflows-starter-template | hdot123/workflows-starter-template | 旧世界 | ARCHIVED | [RETIRE] → 已归档 | hdot123 |
 
-## 2. Factory 运行时
-
-| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
-|------|-------------|----------|------|----------|-------|
-| `~/.factory` | host filesystem | 新世界 | ACTIVE | 保留 | hdot123 |
-| hooks | `~/.factory/hooks` | 新世界 | ACTIVE | 保留 | hdot123 |
-| missions | `~/.factory/missions` | 新世界 | ACTIVE | 保留 | hdot123 |
-| config/repositories.yml | `~/.factory/config/repositories.yml` | 新世界 | ACTIVE | 收编 | hdot123 |
-| webhook 脚本 | `~/.factory/webhook/scripts` | 新世界 | ACTIVE | 保留 | hdot123 |
-
-## 3. 通知链（webhook 全链路）
-
-| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
-|------|-------------|----------|------|----------|-------|
-| hdot123/webhook (CF Worker) | ci-webhook.exa.edu.kg | 旧世界 | ACTIVE | 收编 | hdot123 |
-| 本地 webhook 脚本 | `~/.factory/webhook/scripts/` | 新世界 | ACTIVE | 保留 | hdot123 |
-| pending 文件 | `~/.factory/webhook/locks/` | 新世界 | ACTIVE | 保留 | hdot123 |
-
-## 4. Runner 机队
-
-| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
-|------|-------------|----------|------|----------|-------|
-| ce-01 | GitHub Actions | 新世界 | ACTIVE | 分阶段处置：公开期引擎 ubuntu-latest；引擎转私有仓后切 self-hosted,pve-linux（已记录在 runbook 迁移清单） | hdot123 |
-| pve-runner-01..06 | 自建服务器 | 新世界 | ACTIVE | 保留 | hdot123 |
-
-## 5. 遗留模板仓
-
-| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
-|------|-------------|----------|------|----------|-------|
-| ci-templates | hdot123/ci-templates | 旧世界 | ARCHIVED | [RETIRE] → 已归档 | hdot123 |
-| gitlab-ci-standards | hdot123/gitlab-ci-standards | 旧世界 | ARCHIVED | [RETIRE] → 已归档 | hdot123 |
-| workflows-starter-template | hdot123/workflows-starter-template | 旧世界 | ARCHIVED | [RETIRE] → 已归档 | hdot123 |
-
-## 6. 遗留基础设施
+## 6. 遗留基础设施 (MIXED)
 
 | 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
 |------|-------------|----------|------|----------|-------|
@@ -198,13 +165,6 @@
 - [ ] 旧项目 infra-core 冻结且 ID 为 4b08a1b7-1382-49fe-8b80-6e987bcf160a
 - [ ] 引擎仓变量 LINEAR_PROJECT_* 配置正确
 
-## 6. 遗留基础设施
-
-| 组件 | 所在仓/位置 | 世界归属 | 状态 | 处置结论 | Owner |
-|------|-------------|----------|------|----------|-------|
-| gh-proxy | `hdot123/infraro-core/cf/gh-proxy` | 旧世界 | ACTIVE | 迁出 | hdot123 |
-| gateway-admin | hdot123/gateway-admin | 旧世界 | INACTIVE | [RETIRE] | hdot123 |
-
 ## 8. 基础检查（探针集）
 
 以下为基础检查探针的实跑结果.
@@ -247,7 +207,7 @@
 
 ### Strict Mode 状态验证
 
-- **Worker 侧**: worker.js 中无 "strict" 概念；wrangler.toml [vars] 包含路由标志 R1_ROUTE_ERROR="true", R1_ROUTE_LINEAR="true"
+- **Worker 侧**: worker.js 中无 "strict" 概念；wrangler.toml [vars] 包含路由标志 R1_ROUTE_ERROR="true", R1_ROUTE_LINEAR="true" (worker.js:695/:864 gate the two dispatch chains).
 - **引擎仓侧**: 仓库变量 WEBHOOK_NOTIFY_STRICT=true (2026-09-12T20:27:07Z 设置)，在 .github/workflows/ci.yml:688 消费并实施
 
 ### Pending-CI 链路验证
