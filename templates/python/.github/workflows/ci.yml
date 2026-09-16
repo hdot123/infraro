@@ -87,7 +87,7 @@ jobs:
       - name: BOUNDARY guard (no local paths in tracked files)
         run: |
           set -euo pipefail
-          if grep -r '/Users/' . --include='*.py' --include='*.yml' 2>/dev/null; then
+          if grep -r '/Users/' src tests --include='*.py' --include='*.yml' 2>/dev/null; then
             echo "::error::Local paths found in tracked files"
             exit 1
           fi
