@@ -1,0 +1,38 @@
+name: Watchdog
+on:
+  schedule:
+    - cron: '30 */2 * * *'  # Every 2 hours at 30 minutes past the hour (avoiding peak times)
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      mode:
+        description: 'Handler to run: self-heal-rerun | cancel-on-ci-fail'
+        required: true
+        type: string
+      run_id:
+        description: '上游 workflow_run.id'
+        required: true
+        type: number
+      run_attempt:
+        description: '上游 workflow_run.run_attempt'
+        required: true
+        type: number
+      head_sha:
+        description: '上游 workflow_run.head_sha（cancel-on-ci-fail 用）'
+        required: false
+        type: string
+        default: ''
+      max_attempt:
+        description: 'rerun 限界（caller 转发 vars.WATCHDOG_MAX_ATTEMPT；空时脚本回退 3）'
+        required: false
+        type: string
+        default: ''
+jobs:
+  watchdog:
+    uses: hdot123/infraro-core/.github/workflows/droid-review-watchdog-handlers.yml@v0.18.5
+    with:
+      mode: ${{ inputs.mode }}
+      run_id: ${{ inputs.run_id }}
+      run_attempt: ${{ inputs.run_attempt }}
+      head_sha: ${{ inputs.head_sha }}
+      max_attempt: ${{ inputs.max_attempt }}

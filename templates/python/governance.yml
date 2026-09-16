@@ -1,0 +1,32 @@
+# Provenance: Copied from hdot123/infraro-core repository
+# Source: .github/workflows/evolution-governance.yml
+# Tag: v0.18.5
+# Commit: 5df290af3ea6e6bcb945e922116e061418c5a707
+# Copy Date: 2026-09-16
+name: Evolution Governance
+
+on:
+  pull_request_target:
+    branches: [main]
+    paths:
+      - '.evolution/**'
+      - '.github/workflows/**'
+      - 'src/infra_core/engine/**'
+      - 'webhook-scripts/**'
+      - 'actions/**'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  governance:
+    name: Block non-owner governance modifications
+    runs-on: ubuntu-latest
+    steps:
+      - name: Governance check
+        uses: hdot123/infraro-core/actions/governance-check@3695445b1d8df8997de35d39256ffe596d229c8c # v0.7.2 (PR #138)
+        with:
+          owner-login: hdot123
+          protected-patterns: .evolution/**,.github/workflows/**,src/infra_core/engine/**,webhook-scripts/**
+          github-token: ${{ secrets.github_token }}

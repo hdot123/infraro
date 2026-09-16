@@ -1,0 +1,79 @@
+name: Droid Review
+on:
+  pull_request_target:
+    types: [opened, ready_for_review, reopened, synchronize]
+  workflow_call:
+    inputs:
+      engine_ref:
+        required: false
+        type: string
+        description: "Engine ref to use"
+      pr_number:
+        description: 'PR number (workflow_dispatch passthrough; empty for pull_request_target)'
+        required: false
+        type: string
+        default: ''
+      head_sha:
+        description: 'Head SHA override (workflow_dispatch passthrough)'
+        required: false
+        type: string
+        default: ''
+      shard_max_files:
+        description: 'Layer 3: shard size cap in files (caller 转发 vars.SHARD_MAX_FILES)'
+        required: false
+        type: string
+        default: '25'
+      shard_max_count:
+        description: 'Layer 3: shard count cap (caller 转发 vars.SHARD_MAX_COUNT)'
+        required: false
+        type: string
+        default: '6'
+      shard_timeout_minutes:
+        description: 'Layer 1: shard job timeout in minutes (caller 转发 vars.SHARD_TIMEOUT_MINUTES)'
+        required: false
+        type: string
+        default: '45'
+      shard_max_parallel:
+        description: 'Layer 4: matrix concurrency cap (caller 转发 vars.SHARD_MAX_PARALLEL)'
+        required: false
+        type: string
+        default: '3'
+    secrets:
+      factory_api_key:
+        required: true
+        description: "Factory API key for authentication"
+      nvidia_kong_proxy_key:
+        required: false
+        description: "Kong proxy key for NVIDIA LLM access"
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number (for manual runs)'
+        required: false
+        type: string
+      head_sha:
+        description: 'Head SHA override (for manual runs)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  droid-auto-review:
+    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.5
+    with:
+      engine_ref: ${{ inputs.engine_ref }}
+      pr_number: ${{ inputs.pr_number }}
+      head_sha: ${{ inputs.head_sha }}
+      shard_max_files: ${{ inputs.shard_max_files }}
+      shard_max_count: ${{ inputs.shard_max_count }}
+      shard_timeout_minutes: ${{ inputs.shard_timeout_minutes }}
+      shard_max_parallel: ${{ inputs.shard_max_parallel }}
+    secrets:
+      factory_api_key: ${{ secrets.factory_api_key }}
+      nvidia_kong_proxy_key: ${{ secrets.nvidia_kong_proxy_key }}
