@@ -1,15 +1,17 @@
-# Evolution configuration for TypeScript stack consumer repo
-# IQ-219: template for consumer repos
-
-engine_ref: "hdot123/infraro-core"
-engine_tag: "v0.18.4"
-
-# Suppression rules for specific checks
-suppress:
-  # List of patterns to suppress
-  - pattern: "**/node_modules/**"
-    reason: "Third-party dependencies"
-  - pattern: "**/dist/**"
-    reason: "Build output"
-  - pattern: "**/.cache/**"
-    reason: "Cache directory"
+# Evolution configuration for consumer repository (born-complete baseline).
+# Scanner reads only, never writes. Required keys per infra-core v0.18.5
+# evolution_scanner config validation.
+version: 1
+evolution:
+  enabled: true
+  engine_ref: v0.18.5
+  mode: consumer
+max_issues_per_tick: 1
+max_self_audit_issues_per_tick: 1
+max_code_hygiene_issues_per_tick: 1
+severity_order: [critical, warning, info]
+dedup_label: evolution-found
+isolation_threshold: 3
+failure_label: evolution-isolated
+snapshot_limit: 100
+audit_tools: []
