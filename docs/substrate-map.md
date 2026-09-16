@@ -193,7 +193,7 @@
 | Linear key 只读探针 | `linear__get_project --id 4b08a1b7-1382-49fe-8b80-6e987bcf160a` | `{"id": "4b08a1b7-1382-49fe-8b80-6e987bcf160a", "name": "infra-core", ...}` | `Valid project response with matching ID` | ✅ PASS |
 | repositories.yml 一致性 | `grep -q "hdot123/infraro" ~/.factory/config/repositories.yml && echo "Found" \|\| echo "Missing"` | `Found` | `Found` | ✅ PASS |
 | runner 标签一致性 | `grep -A 5 -B 5 "pve-linux" docs/runner-registration-runbook.md && grep -A 5 -B 5 "runs-on" ../infraro-core/.github/workflows/auto-merge-pipeline.yml`（自声明仓克隆根执行，引擎克隆为同级目录） | H5口径：分阶段<br>1. 公开期引擎 ubuntu-latest (为安全不落自建机)<br>2. 转私后切 self-hosted,pve-linux (免烧GitHub分钟数) | 分阶段策略验证通过 | ⚠️ TRANSITION |
-| 1Password 关键条目在场 | `1password-connect___search_items vault=sever query="ai.exa.edu.kg / NVIDIA Kong Proxy"`（MCP 规范工具名形态，validator 经 MCP 执行；名称级在场性，不取值） | `sever vault 条目 "ai.exa.edu.kg / NVIDIA Kong Proxy Key" 命中` | `Valid access to required items` | ✅ PASS |
+| 1Password 关键条目在场 | `1password-connect___search_items vault=sever query="ai.lumivane.dpdns.org / NVIDIA Kong Proxy"`（MCP 规范工具名形态，validator 经 MCP 执行；名称级在场性，不取值） | `sever vault 条目 "ai.lumivane.dpdns.org / NVIDIA Kong Proxy Key" 命中` | `Valid access to required items` | ✅ PASS |
 | Worker secrets 存在性 | `1password-connect___search_items vault=sever query="CF Worker / POSTHOG_TOKEN"`（MCP 规范工具名形态；逐名结果见 §9 表） | POSTHOG_TOKEN 条目 found, others missing | All 6 items available | ❌ BLOCKED (无 CF API token；实面核验需用户提供 scoped API token 或裁定 Dash 登录路线——转用户裁定，worker 不自行登录 Dash) |
 
 ## 9. Worker Secrets 验证
