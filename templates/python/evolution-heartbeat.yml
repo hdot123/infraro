@@ -1,0 +1,39 @@
+# Evolution Heartbeat thin caller（r38 consumer-template-reconciliation）。
+# 文件名契约：本仓文件必须为 evolution-heartbeat.yml——扫描器反向探活
+# （watch_heartbeat_channel）按 HEARTBEAT_WORKFLOW = "evolution-heartbeat.yml"
+# 文件名解析心跳存活（INFRA-588）。
+#
+# 触发面契约（对齐参照消费仓形态）：schedule（INFRA-578 错峰分钟位）+
+# workflow_dispatch（被 load-shed 时扫描器反向拉起必需）。
+#
+# SCANNER_WORKFLOW 契约：引擎常量 SCANNER_WORKFLOW = "evolution-scan.yml"
+# 指本仓扫描器 caller 文件名——消费仓与本模板同用契约名，无需覆盖。
+# （引擎 scanner_workflow 输入落地并在本仓 pin 升级后，文件名不同的
+# 消费仓可传 scanner_workflow 覆盖；@v0.18.5 声明面无该输入，禁止传。）
+#
+# INFRA-578: cron 分钟位避开 :00/:30（GitHub 高峰 load-shed drop 窗口）。
+
+name: Evolution Heartbeat
+
+on:
+  schedule:
+    - cron: '47 */2 * * *'  # Every 2 hours at minute 47 (off-peak, INFRA-578)
+  workflow_dispatch: {}
+
+concurrency:
+  group: evolution-heartbeat
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  heartbeat:
+    # INFRA-651: reusable 模板引用钉 tag，与引擎 pin 同版本；禁止 @main 浮动。
+    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.5
+    permissions:
+      contents: read
+      issues: write
+    secrets:
+      dispatch_token: ${{ secrets.DISPATCH_TOKEN }}

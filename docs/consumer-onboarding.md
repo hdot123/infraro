@@ -39,30 +39,27 @@ The runner should use the following labels:
 
 Use the provided workflow templates from the declaration repository. The system uses a dual-stack approach:
 
-- **5 thin-caller templates** (workflow-level tag anchors): scan.yml, heartbeat.yml, auto-merge.yml, droid-review.yml, watchdog.yml - these use the `uses@tag` anchor discipline (full anchor with engine=workflow=same tag), prohibiting `@main` usage.
+- **5 thin-caller templates** (workflow-level tag anchors): evolution-scan.yml, evolution-heartbeat.yml, auto-merge.yml, droid-review.yml, droid-review-watchdog.yml - these use the `uses@tag` anchor discipline (full anchor with engine=workflow=same tag), prohibiting `@main` usage.
 - **2 copy-form templates** (provenance header + composite action SHA pins): governance.yml, branch-cleanup.yml - these contain full workflow content with provenance headers and pinned composite actions at specific commit SHAs.
 
 All templates prohibit `@main` usage in their respective anchor disciplines.
+
+**Filename contracts** (r38 consumer-template-reconciliation): the scanner and heartbeat thin-caller filenames are load-bearing — the heartbeat engine probes scanner liveness and performs self-heal dispatch by the exact filename `evolution-scan.yml` (`gh run list --workflow` / `gh workflow run`), and the scanner reverse-watches `evolution-heartbeat.yml` (INFRA-588). Consumer repos must keep these filenames byte-exact; the watchdog caller must be named `droid-review-watchdog.yml` with workflow name `Droid Review Watchdog` so its `workflow_run` filters ("Droid Auto Review", "CI") match sibling workflows' names.
 
 The templates are organized in a dual-stack manner:
 
 - **Python Stack**: Located in [templates/python/](../templates/python/)
 - **TypeScript Stack**: Located in [templates/typescript/](../templates/typescript/)
 
-Both stacks contain the same 7 templates but may be used with different calling conventions:
+Both stacks contain the same 7 templates:
 
-- Python stack: thin anchor form (single anchor, engine_ref inferred)
-- TypeScript stack: explicit parameter form (engine_ref explicitly passed)
-
-Templates available in both stacks:
-
-- scan.yml (thin-caller)
-- heartbeat.yml (thin-caller)
+- evolution-scan.yml (thin-caller)
+- evolution-heartbeat.yml (thin-caller)
 - governance.yml (copy-form)
 - branch-cleanup.yml (copy-form)
 - auto-merge.yml (thin-caller)
 - droid-review.yml (thin-caller)
-- watchdog.yml (thin-caller)
+- droid-review-watchdog.yml (thin-caller)
 
 ## Naming Contracts
 
