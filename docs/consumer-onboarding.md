@@ -45,10 +45,12 @@ Use the provided workflow templates from the declaration repository. The system 
 All templates prohibit `@main` usage in their respective anchor disciplines.
 
 The templates are organized in a dual-stack manner:
+
 - **Python Stack**: Located in [templates/python/](../templates/python/)
 - **TypeScript Stack**: Located in [templates/typescript/](../templates/typescript/)
 
 Both stacks contain the same 7 templates but may be used with different calling conventions:
+
 - Python stack: thin anchor form (single anchor, engine_ref inferred)
 - TypeScript stack: explicit parameter form (engine_ref explicitly passed)
 
