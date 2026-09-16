@@ -99,7 +99,7 @@ concurrency:
 
 jobs:
   droid-auto-review:
-    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.4
+    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.5
     with:
       engine_ref: ${{ inputs.engine_ref }}
       engine-ref: ${{ inputs['engine-ref'] }}
@@ -116,5 +116,5 @@ jobs:
       shard_max_parallel: ${{ inputs.shard_max_parallel }}
       shard-max-parallel: ${{ inputs['shard-max-parallel'] }}
     secrets:
-      FACTORY_API_KEY: ${{ secrets.factory_api_key || secrets.FACTORY_API_KEY }}
-      NVIDIA_KONG_PROXY_KEY: ${{ secrets.nvidia_kong_proxy_key || secrets.NVIDIA_KONG_PROXY_KEY }}
+      factory_api_key: ${{ secrets.factory_api_key }}
+      nvidia_kong_proxy_key: ${{ secrets.nvidia_kong_proxy_key }}

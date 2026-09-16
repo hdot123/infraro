@@ -1,8 +1,8 @@
 # Provenance: Copied from hdot123/infraro-core repository
 # Source: .github/workflows/evolution-governance.yml
-# Tag: v0.18.4
-# Commit: 2225716
-# Copy Date: 2026-09-13
+# Tag: v0.18.5
+# Commit: 
+# Copy Date: 2026-09-16
 name: Evolution Governance
 
 on:
@@ -29,4 +29,4 @@ jobs:
         with:
           owner-login: hdot123
           protected-patterns: .evolution/**,.github/workflows/**,src/infra_core/engine/**,webhook-scripts/**
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github_token }}
