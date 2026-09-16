@@ -15,7 +15,7 @@ on:
         description: "PAT (hdot123) for issue/label writes and self-heal dispatch"
 jobs:
   heartbeat:
-    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.5
+    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.4
     with:
       engine_ref: ${{ inputs.engine_ref }}
     secrets:

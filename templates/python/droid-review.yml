@@ -65,7 +65,7 @@ concurrency:
 
 jobs:
   droid-auto-review:
-    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.5
+    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.4
     with:
       engine_ref: ${{ inputs.engine_ref }}
       pr_number: ${{ inputs.pr_number }}

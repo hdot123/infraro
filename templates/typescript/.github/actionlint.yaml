@@ -1,0 +1,6 @@
+# GitHub: .github/actionlint.yaml
+# CI: actionlint.yaml (v1.7.11)
+# https://github.com/rhysd/actionlint/blob/main/docs/config.md
+
+labels:
+  - pve-linux

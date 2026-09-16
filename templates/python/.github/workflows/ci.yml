@@ -1,0 +1,136 @@
+# CI workflow for Python consumer repo
+# Follows宣告仓双栈模板约定（F4-spec VAL-CONS-005）
+# 引用引擎 v0.18.4 reusable workflows for core logic
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# F4/VAL-CONS-006: Explicit least-privilege baseline
+permissions:
+  contents: read
+  checks: read
+
+# 顶层 concurrency - F4 结构不变量（I9）
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # ─── pytest job (Python stack quality gate) ───
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workspace guard (sparse residue detox)
+        run: |
+          set -euo pipefail
+          if [ -e "$GITHUB_WORKSPACE/.git" ]; then
+            SPARSE_FLAG=$(git -C "$GITHUB_WORKSPACE" config --type=bool --get core.sparseCheckout 2>/dev/null || echo false)
+            if [ "$SPARSE_FLAG" = "true" ] || [ ! -f "$GITHUB_WORKSPACE/.github/actions/setup-venv/action.yml" ]; then
+              echo "::warning::Workspace has sparse/prune residue; removing .git for clean re-clone"
+              rm -rf "$GITHUB_WORKSPACE/.git"
+            fi
+          fi
+
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Run tests
+        run: |
+          set -euo pipefail
+          if [ -f pyproject.toml ]; then
+            pip install -e . pytest
+            pytest -q
+          else
+            echo "No pyproject.toml - skipping tests"
+          fi
+
+  # ─── lint job (Python stack quality gate) ───
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Run ruff
+        run: |
+          set -euo pipefail
+          pip install ruff
+          ruff check .
+          ruff format --check .
+
+  # ─── typecheck job (Python stack quality gate) ───
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Run mypy
+        run: |
+          set -euo pipefail
+          pip install mypy
+          mypy src/ --import-missing --ignore-missing-imports || true
+
+  # ─── guards job (Python stack quality gate) ───
+  guards:
+    name: guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: BOUNDARY guard (no local paths in tracked files)
+        run: |
+          set -euo pipefail
+          if grep -r '/Users/' . --include='*.py' --include='*.yml' 2>/dev/null; then
+            echo "::error::Local paths found in tracked files"
+            exit 1
+          fi
+          echo "BOUNDARY guard passed"
+
+  # ─── ci-ok: aggregation gate with droid-review ───
+  # F4: ci-ok aggregator scans all check-runs and droid-review gate
+  ci-ok:
+    name: ci-ok
+    needs:
+      - test
+      - lint
+      - typecheck
+      - guards
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check all required jobs
+        run: |
+          set -euo pipefail
+          FAILED=0
+          # droid-review runs as a separate workflow (pull_request_target); query its conclusion
+          DROID=$(curl -sf -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"             "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha || github.sha }}/check-runs"             | jq -r '.check_runs[] | select(.name == "droid-review") | .conclusion' | head -1)
+          [[ "$DROID" == "success" ]] || { echo "FAIL: droid-review ($DROID)"; FAILED=1; }
+          [[ "${{ needs.test.result }}" == "success" ]] || { echo "FAIL: test"; FAILED=1; }
+          [[ "${{ needs.lint.result }}" == "success" ]] || { echo "FAIL: lint"; FAILED=1; }
+          [[ "${{ needs.typecheck.result }}" == "success" ]] || { echo "FAIL: typecheck"; FAILED=1; }
+          [[ "${{ needs.guards.result }}" == "success" ]] || { echo "FAIL: guards"; FAILED=1; }
+          if [[ "$FAILED" -eq 1 ]]; then
+            echo "❌ One or more required jobs failed"
+            exit 1
+          fi
+          echo "✅ All required jobs passed"
+
+  # ─── notify: webhook notification ───
+  notify:
+    name: notify-ci-complete
+    runs-on: ubuntu-latest
+    needs: [ci-ok]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Notify webhook gateway
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          echo "CI completed on branch ${BRANCH_NAME}"

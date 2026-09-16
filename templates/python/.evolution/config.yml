@@ -1,0 +1,13 @@
+# Evolution configuration for Python stack consumer repo
+# IQ-219: template for consumer repos
+
+engine_ref: "hdot123/infraro-core"
+engine_tag: "v0.18.4"
+
+# Suppression rules for specific checks
+suppress:
+  # List of patterns to suppress
+  - pattern: "**/node_modules/**"
+    reason: "Third-party dependencies"
+  - pattern: "**/venv/**"
+    reason: "Python virtual environment"
