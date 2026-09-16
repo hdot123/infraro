@@ -48,10 +48,13 @@ jobs:
       - name: Install dependencies
         run: |
           set -euo pipefail
-          if [ -f package.json ]; then
-            npm ci
+          if [ ! -f package.json ]; then
+            echo "No package.json - skipping install"
+          elif [ -f pnpm-lock.yaml ]; then
+            npm install -g pnpm@10 --silent
+            pnpm install --frozen-lockfile
           else
-            echo "No package.json - skipping npm ci"
+            npm ci
           fi
 
       - name: Run tests
@@ -78,10 +81,13 @@ jobs:
       - name: Install dependencies
         run: |
           set -euo pipefail
-          if [ -f package.json ]; then
-            npm ci
+          if [ ! -f package.json ]; then
+            echo "No package.json - skipping install"
+          elif [ -f pnpm-lock.yaml ]; then
+            npm install -g pnpm@10 --silent
+            pnpm install --frozen-lockfile
           else
-            echo "No package.json - skipping npm ci"
+            npm ci
           fi
 
       - name: Run ESLint
@@ -104,10 +110,13 @@ jobs:
       - name: Install dependencies
         run: |
           set -euo pipefail
-          if [ -f package.json ]; then
-            npm ci
+          if [ ! -f package.json ]; then
+            echo "No package.json - skipping install"
+          elif [ -f pnpm-lock.yaml ]; then
+            npm install -g pnpm@10 --silent
+            pnpm install --frozen-lockfile
           else
-            echo "No package.json - skipping npm ci"
+            npm ci
           fi
 
       - name: Run TypeScript compiler
