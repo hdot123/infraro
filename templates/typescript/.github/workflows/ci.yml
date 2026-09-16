@@ -1,6 +1,6 @@
 # CI workflow for TypeScript consumer repo
 # Follows宣告仓双栈模板约定（F4-spec VAL-CONS-005）
-# 引用引擎 v0.18.4 reusable workflows for core logic
+# 引用引擎 v0.18.5 reusable workflows for core logic
 
 name: CI
 
