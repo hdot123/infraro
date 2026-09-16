@@ -1,0 +1,36 @@
+name: Auto Merge
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  workflow_run:
+    workflows: ["CI", "QA", "Droid Auto Review", "Evolution Governance"]
+    types: [completed]
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+  workflow_call:
+    inputs:
+      engine_ref:
+        required: false
+        type: string
+        description: "Engine ref to use"
+    secrets:
+      dispatch_token:
+        required: true
+        description: "合并/更新分支/评论凭证（caller 侧 DISPATCH_TOKEN PAT，不受 GITHUB_TOKEN 递归抑制）"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  actions: read
+
+concurrency:
+  group: auto-merge-pipeline
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    uses: hdot123/infraro-core/.github/workflows/auto-merge-pipeline.yml@v0.18.5
+    secrets:
+      dispatch_token: ${{ secrets.dispatch_token }}
