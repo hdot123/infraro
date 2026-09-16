@@ -17,7 +17,7 @@ on:
         description: "LINEAR_API_KEY for auto_close_resolved Linear state verification"
 jobs:
   scan:
-    uses: hdot123/infraro-core/.github/workflows/evolution-scan.yml@v0.18.5
+    uses: hdot123/infraro-core/.github/workflows/evolution-scan.yml@v0.18.4
     with:
       engine_ref: ${{ inputs.engine_ref }}
     secrets:
