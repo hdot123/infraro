@@ -1,3 +1,5 @@
-# Test PR to observe droid-review check-run
+# Test Droid Review Trigger
 
-This PR is to verify that the droid-review check-run appears in the PR checks after merging the CI workflow changes.
+This file exists solely to trigger the droid-review workflow on a PR.
+
+Updated to test post-merge functionality.
