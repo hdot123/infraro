@@ -29,6 +29,26 @@ on:
         description: 'Head SHA override (for manual runs)'
         required: false
         type: string
+      shard_max_files:
+        description: 'Max files per shard'
+        required: false
+        type: string
+        default: '25'
+      shard_max_count:
+        description: 'Max shards'
+        required: false
+        type: string
+        default: '6'
+      shard_timeout_minutes:
+        description: 'Shard timeout (minutes)'
+        required: false
+        type: string
+        default: '45'
+      shard_max_parallel:
+        description: 'Max parallel shards'
+        required: false
+        type: string
+        default: '3'
 
 permissions:
   contents: read
@@ -56,6 +76,7 @@ jobs:
     secrets:
       factory_api_key: ${{ secrets.FACTORY_API_KEY }}
       nvidia_kong_proxy_key: ${{ secrets.NVIDIA_KONG_PROXY_KEY }}
+      lumivane_cfat: ${{ secrets.LUMIVANE_CFAT }}
 
   droid-review:
     name: droid-review
