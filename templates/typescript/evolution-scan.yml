@@ -41,6 +41,7 @@ jobs:
       )
     with:
       engine_ref: v0.18.5
+      runner: self-hosted,pve-linux
     permissions:
       contents: read
       issues: write
