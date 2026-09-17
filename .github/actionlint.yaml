@@ -5,3 +5,5 @@ self-hosted-runner:
   labels:
     - self-hosted
     - pve-linux
+
+# e2e validation marker 2026-09-18: droid-review shard+aggregate pipeline check
