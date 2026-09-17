@@ -26,3 +26,5 @@ To get started using the infraro engine in your project:
 ## Next Steps
 
 Continue to the [Consumer Onboarding](consumer-onboarding.md) guide to learn how to set up your consumer repository with the infraro engine.
+
+For the authoritative three-layer delivery standard (engine / declaration / consumer), see [Delivery Standard](delivery-standard.md).
