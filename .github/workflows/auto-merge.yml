@@ -1,0 +1,89 @@
+# Auto Merge thin caller（声明仓模板，对应引擎 reusable workflow）
+# 调用引擎仓 reusable workflow（hdot123/infraro-core/.github/workflows/auto-merge-pipeline.yml）
+# 通过 workflow_call 接口，保持与消费层模板相同的 thin-caller 模式。
+
+name: Auto Merge
+
+on:
+  workflow_run:
+    workflows: ["CI", "QA", "Droid Auto Review", "Evolution Governance"]
+    types: [completed]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to merge (empty = sweep all open PRs)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  actions: read
+
+concurrency:
+  group: auto-merge-pipeline
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: Resolve candidate PRs
+    runs-on: ubuntu-latest
+    # workflow_run 只有在结论为 success 时才尝试合并；其余事件各自自行门控。
+    if: |
+      github.event_name == 'pull_request_target' ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    outputs:
+      pr_numbers: ${{ steps.resolve.outputs.pr_numbers }}
+    steps:
+      - id: resolve
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          WR_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          MANUAL_PR: ${{ github.event.inputs.pr_number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          echo "Event: $EVENT_NAME"
+          case "$EVENT_NAME" in
+            pull_request_target)
+              if [ -n "$PR_NUMBER" ]; then
+                echo "pr_numbers=[\"$PR_NUMBER\"]" >> "$GITHUB_OUTPUT"
+              fi
+              ;;
+            workflow_dispatch)
+              if [ -n "$MANUAL_PR" ]; then
+                echo "pr_numbers=[\"$MANUAL_PR\"]" >> "$GITHUB_OUTPUT"
+              else
+                # 未指定 PR 号：扫描所有 open PR
+                PRS=$(gh pr list --repo "$REPO" --state open --json number --jq '[.[].number]')
+                echo "pr_numbers=$PRS" >> "$GITHUB_OUTPUT"
+              fi
+              ;;
+            workflow_run)
+              # 按完成工作流的 head SHA 反查关联的 open PR
+              PRS=$(gh pr list --repo "$REPO" --state open --json number,headRefOid \
+                    --jq "[.[] | select(.headRefOid == \"$WR_HEAD_SHA\") | .number]")
+              echo "pr_numbers=$PRS" >> "$GITHUB_OUTPUT"
+              ;;
+            schedule)
+              PRS=$(gh pr list --repo "$REPO" --state open --json number --jq '[.[].number]')
+              echo "pr_numbers=$PRS" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+  auto-merge:
+    name: Auto-merge PR
+    needs: resolve
+    if: needs.resolve.outputs.pr_numbers != '' && needs.resolve.outputs.pr_numbers != '[]'
+    uses: hdot123/infraro-core/.github/workflows/auto-merge-pipeline.yml@v0.18.7
+    secrets:
+      dispatch_token: ${{ secrets.DISPATCH_TOKEN }}
