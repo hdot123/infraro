@@ -18,6 +18,26 @@ on:
         description: 'Head SHA override (for manual runs)'
         required: false
         type: string
+      shard_max_files:
+        description: 'Max files per shard (default: 25)'
+        required: false
+        type: string
+        default: '25'
+      shard_max_count:
+        description: 'Max shard count (default: 6)'
+        required: false
+        type: string
+        default: '6'
+      shard_timeout_minutes:
+        description: 'Shard timeout in minutes (default: 45)'
+        required: false
+        type: string
+        default: '45'
+      shard_max_parallel:
+        description: 'Max parallel shards (default: 3)'
+        required: false
+        type: string
+        default: '3'
 
 permissions:
   contents: read
@@ -113,9 +133,17 @@ jobs:
             exit 1
           fi
 
-  # ── Job 1: Call reusable droid-review-shards workflow ──
-  call-shards:
+  # ── Job 1: Droid Auto Review (calls reusable workflow) ──
+  # Note: Job calling reusable workflow cannot specify runs-on - runner is
+  # determined by the reusable workflow (droid-review-shards.yml uses ubuntu-latest)
+  # and cannot be overridden by caller. Permissions declared here apply to the
+  # entire job including the called workflow.
+  droid-auto-review:
     needs: setup
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: write
     uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.7
     with:
       pr_number: ${{ needs.setup.outputs.pr_number }}
@@ -129,88 +157,33 @@ jobs:
       nvidia_kong_proxy_key: ${{ secrets.NVIDIA_KONG_PROXY_KEY }}
       lumivane_cfat: ${{ secrets.LUMIVANE_CFAT }}
 
-  # ── Job 2: Aggregate and publish findings ──
+  # ── Job 2: Aggregate and publish findings using composite action ──
   droid-review:
-    needs: [setup, call-shards]
+    needs: [setup, droid-auto-review]
     if: >-
       always() &&
-      needs.call-shards.result == 'success' &&
-      needs.call-shards.outputs.plan_shards_ok == 'true'
-    runs-on: ubuntu-latest
+      needs.droid-auto-review.result == 'success' &&
+      needs.droid-auto-review.outputs.plan_shards_ok == 'true'
+    runs-on: [self-hosted, pve-linux]
     timeout-minutes: ${{ fromJSON(vars.DROID_REVIEW_TIMEOUT_MINUTES || '90') }}
     permissions:
-      contents: read        # checkout (BASE)
-      pull-requests: write  # publish findings as PR comment via gh api
-      issues: write         # gh api may post to issues
-      actions: write        # download-artifact (read+write scope; download requires actions:write)
+      contents: read
+      pull-requests: write
+      issues: write
+      actions: read
     steps:
-      - name: Workspace guard (sparse residue detox)
-        run: |
-          set -euo pipefail
-          # 2026-08-28 污染事故运行时排毒：共享持久 _work 工作区的 sparse 残留
-          # 使 checkout 自带的 sparse-checkout disable 无法恢复被裁剪的工作树
-          # （实证：disable 后仍缺 .github/actions/setup-venv）。本步在
-          # checkout 前检测残留并删除 .git 强制全新克隆；必须内联 run——
-          # 工作树残缺时本地 composite action 同样无法解析。
-          if [ -e "$GITHUB_WORKSPACE/.git" ]; then
-            SPARSE_FLAG=$(git -C "$GITHUB_WORKSPACE" config --type=bool --get core.sparseCheckout 2>/dev/null || echo false)
-            if [ "$SPARSE_FLAG" = "true" ] || [ ! -f "$GITHUB_WORKSPACE/.github/actions/setup-venv/action.yml" ]; then
-              echo "::warning::Workspace has sparse/prune residue; removing .git for a clean re-clone"
-              rm -rf "$GITHUB_WORKSPACE/.git"
-            fi
-          fi
-
       - name: Checkout repository (BASE)
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           ref: ${{ needs.setup.outputs.base_sha }}
           fetch-depth: 1
 
-      - name: Setup venv (per-run isolation)
-        uses: ./.github/actions/setup-venv
-
-      - name: Check shard results
-        id: check_results
-        env:
-          PR_NUMBER: ${{ needs.setup.outputs.pr_number }}
-          HEAD_SHA: ${{ needs.setup.outputs.head_sha }}
-          DOCS_ONLY: ${{ needs.call-shards.outputs.docs_only }}
-          SHARDS: ${{ needs.call-shards.outputs.shards }}
-        run: |
-          set -euo pipefail
-
-          if [ "$DOCS_ONLY" = "true" ]; then
-            echo "docs-only PR — skipping aggregation"
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [ "$SHARDS" = "[]" ] || [ -z "$SHARDS" ]; then
-            echo "no shards planned — skipping aggregation"
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "should_publish=true" >> "$GITHUB_OUTPUT"
-
-      - name: Download findings artifacts
-        if: steps.check_results.outputs.should_publish == 'true'
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+      - name: Run droid-review-aggregate composite action
+        uses: hdot123/infraro-core/actions/droid-review-aggregate@3695445b1d8df8997de35d39256ffe596d229c8c
         with:
-          pattern: droid-review-debug-${{ github.run_id }}-shard-*
-          path: findings/
-
-      - name: Publish findings
-        if: steps.check_results.outputs.should_publish == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ needs.setup.outputs.pr_number }}
-          REPOSITORY: ${{ github.repository }}
-          COMMIT_ID: ${{ needs.setup.outputs.head_sha }}
-        run: |
-          set -euo pipefail
-          python3 scripts/droid_review/publish_findings.py \
-            --pattern "findings/*/findings-shard-*.json" \
-            --pr-number "$PR_NUMBER" \
-            --repository "$REPOSITORY" \
-            --commit-id "$COMMIT_ID"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pr-number: ${{ needs.setup.outputs.pr_number }}
+          head-sha: ${{ needs.setup.outputs.head_sha }}
+          docs-only: ${{ needs.droid-auto-review.outputs.docs_only }}
+          shards: ${{ needs.droid-auto-review.outputs.shards }}
+          shards-result: ${{ needs.droid-auto-review.result }}
