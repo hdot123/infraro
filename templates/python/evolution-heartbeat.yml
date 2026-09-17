@@ -9,7 +9,7 @@
 # SCANNER_WORKFLOW 契约：引擎常量 SCANNER_WORKFLOW = "evolution-scan.yml"
 # 指本仓扫描器 caller 文件名——消费仓与本模板同用契约名，无需覆盖。
 # （引擎 scanner_workflow 输入落地并在本仓 pin 升级后，文件名不同的
-# 消费仓可传 scanner_workflow 覆盖；@v0.18.5 声明面无该输入，禁止传。）
+# 消费仓可传 scanner_workflow 覆盖；@v0.18.6 声明面无该输入，禁止传。）
 #
 # INFRA-578: cron 分钟位避开 :00/:30（GitHub 高峰 load-shed drop 窗口）。
 
@@ -31,7 +31,7 @@ permissions:
 jobs:
   heartbeat:
     # INFRA-651: reusable 模板引用钉 tag，与引擎 pin 同版本；禁止 @main 浮动。
-    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.5
+    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.6
     with:
       runner: self-hosted,pve-linux
     permissions:
