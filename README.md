@@ -55,4 +55,4 @@ pip install git+https://github.com/hdot123/infraro-core.git@v0.18.7
 
 ## Templates
 
-- [Workflow Templates](templates/) — 根下单栈为历史存档（@v0.18.5），新接入一律用双栈目录 `templates/python/` 与 `templates/typescript/`
+- [Workflow Templates](templates/) — 双栈目录 `templates/python/` 与 `templates/typescript/`（@v0.18.7）；根下单栈历史存档已删除（陈旧 @v0.18.5 形态，双栈为其 supersede）
