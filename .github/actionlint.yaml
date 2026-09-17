@@ -7,3 +7,4 @@ self-hosted-runner:
     - pve-linux
 
 # e2e validation marker 2026-09-18: droid-review shard+aggregate pipeline check
+# e2e retrigger for green droid-review check-run on PR head
