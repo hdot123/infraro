@@ -89,7 +89,10 @@ jobs:
     name: droid-review
     needs: [droid-auto-review]
     if: ${{ always() && needs.droid-auto-review.outputs.plan_shards_ok == 'true' }}
-    runs-on: [self-hosted, pve-linux]
+    # ubuntu-latest（引擎自仓同位形态，run 35257546748 实证）：infraro 无
+    # self-hosted runner 服务（近 100 run 全 hosted，ce-01 只服务消费仓且
+    # 注册面 SSH 边界不可达），[self-hosted, pve-linux] 会永久排队。
+    runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
       contents: read
