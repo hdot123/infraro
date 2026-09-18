@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Run actionlint
         uses: reviewdog/action-actionlint@v1
@@ -57,10 +57,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout declaration repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout engine repo (interface source of truth)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: hdot123/infraro-core
           path: infraro-core
