@@ -2,9 +2,9 @@
 
 声明层：规则包规范、消费仓接入指南、Workflow 模板、API 参考的公开文档面。声明本体随各消费仓走，本仓为规范与模板真源。
 
-## 双栈模板（当前锚 @v0.18.7）
+## 双栈模板（当前锚 @v0.18.9）
 
-消费仓接入按语言栈各取一套模板，两栈内容对齐、锚点一致（全部 `@v0.18.7`）：
+消费仓接入按语言栈各取一套模板，两栈内容对齐、锚点一致（全部 `@v0.18.9`）：
 
 - **Python 栈**：[templates/python/](templates/python/)
 - **TypeScript 栈**：[templates/typescript/](templates/typescript/)
@@ -13,7 +13,7 @@
 
 | 类别 | 文件 | 形态 |
 |------|------|------|
-| thin-caller | `evolution-scan.yml` / `evolution-heartbeat.yml` / `auto-merge.yml` / `droid-review.yml` / `droid-review-watchdog.yml` | `uses@v0.18.7` tag 锚 |
+| thin-caller | `evolution-scan.yml` / `evolution-heartbeat.yml` / `auto-merge.yml` / `droid-review.yml` / `droid-review-watchdog.yml` | `uses@v0.18.9` tag 锚 |
 | copy-form | `governance.yml` / `branch-cleanup.yml` | 溯源头 + composite action SHA 钉 |
 | 栈内配套 | `.github/workflows/ci.yml`、`.github/actionlint.yaml`、`.evolution/`（config + suppress） | 随栈整取 |
 
@@ -22,7 +22,7 @@
 ## 引擎安装（匿名免认证）
 
 ```bash
-pip install git+https://github.com/hdot123/infraro-core.git@v0.18.7
+pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9
 ```
 
 引擎为公开仓 `hdot123/infraro-core`，git+https 匿名拉取，无需任何 token。
@@ -55,4 +55,4 @@ pip install git+https://github.com/hdot123/infraro-core.git@v0.18.7
 
 ## Templates
 
-- [Workflow Templates](templates/) — 双栈目录 `templates/python/` 与 `templates/typescript/`（@v0.18.7）；根下单栈历史存档已删除（陈旧 @v0.18.5 形态，双栈为其 supersede）
+- [Workflow Templates](templates/) — 双栈目录 `templates/python/` 与 `templates/typescript/`（@v0.18.9）；根下单栈历史存档已删除（陈旧 @v0.18.5 形态，双栈为其 supersede）

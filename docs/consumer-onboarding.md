@@ -16,7 +16,7 @@ The engine can be installed anonymously without requiring any private tokens:
 
 ```bash
 # Install the engine using git+https (no token required)
-pip install git+https://github.com/hdot123/infraro-core.git@v0.18.7
+pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9
 ```
 
 **Note**: This is a public repository that can be accessed anonymously. No legacy tokens or credential rotation tools are required.

@@ -4,7 +4,7 @@
 version: 1
 evolution:
   enabled: true
-  engine_ref: v0.18.7
+  engine_ref: v0.18.9
   mode: consumer
 max_issues_per_tick: 1
 max_self_audit_issues_per_tick: 1
