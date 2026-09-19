@@ -1,0 +1,13 @@
+# CODEOWNERS — infraro（治理全覆盖 mission M2, VAL-TA-005）
+#
+# 全仓默认 owner：所有路径变更需 hdot123 审查（配合分支规则的
+# code owner review 语义与治理守卫形成双保险）。
+* @hdot123
+
+# 敏感路径显式条目（即使默认条目未来调整，这些目录也必须锁定）：
+# 治理面：工作流、可复用动作、模板、owner 清单本体
+.github/ @hdot123
+# 消费仓接入模板：下游配置的真源，误改会外溢到所有消费仓
+templates/ @hdot123
+# substrate 门禁脚本与豁免登记
+substrate/ @hdot123

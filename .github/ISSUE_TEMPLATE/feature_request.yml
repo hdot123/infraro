@@ -1,0 +1,38 @@
+name: Feature Request
+description: 提出一个新能力或改进建议（规范、模板、门禁）
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解决的问题
+      description: 当前做法哪里不够用？影响哪些消费仓或哪条链路？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 期望的规范/模板/门禁形态；若已知接口或字段，请写明。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 备选方案
+      description: 考虑过的其他做法与取舍。
+    validations:
+      required: false
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 影响面
+      multiple: true
+      options:
+        - 规范文档
+        - 消费仓模板
+        - 门禁脚本（substrate）
+        - 工作流接口
+        - 其他
+    validations:
+      required: true
