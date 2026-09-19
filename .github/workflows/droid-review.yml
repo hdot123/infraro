@@ -65,7 +65,7 @@ jobs:
   # Job calling reusable workflow cannot specify runs-on；PR 上下文解析
   # （含 fork guard / dispatch 上下文解析）由 callee setup job 承载。
   droid-auto-review:
-    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.7
+    uses: hdot123/infraro-core/.github/workflows/droid-review-shards.yml@v0.18.9
     permissions:
       contents: read
       pull-requests: read
