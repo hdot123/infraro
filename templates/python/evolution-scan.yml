@@ -30,7 +30,7 @@ permissions:
 jobs:
   scan:
     # INFRA-651: reusable 模板引用钉 tag，与引擎 pin 同版本；禁止 @main 浮动。
-    uses: hdot123/infraro-core/.github/workflows/evolution-scan.yml@v0.18.7
+    uses: hdot123/infraro-core/.github/workflows/evolution-scan.yml@v0.18.9
     with:
       runner: '["self-hosted","pve-linux"]'
     # INFRA-692: dispatch head whitelist fail-closed guard (E1-5)

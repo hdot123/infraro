@@ -30,8 +30,8 @@ body:
     id: environment
     attributes:
       label: 环境
-      description: 消费仓名、workflow 引用版本（如 v0.18.7）、Python 版本。
-      placeholder: "consumer-a / v0.18.7 / Python 3.12.x"
+      description: 消费仓名、workflow 引用版本（如 v0.18.9）、Python 版本。
+      placeholder: "consumer-a / v0.18.9 / Python 3.12.x"
     validations:
       required: false
   - type: textarea
