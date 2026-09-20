@@ -97,6 +97,32 @@ Follow the per-repository base template for repository settings:
 - Secrets setup
 - Squash-only merge settings
 
+## Engine Authorization Preflight（三态与申请入口）
+
+Engine consumption is allowlist-gated. The single source of truth for who may consume the engine is
+[`hdot123/scheduler` → `authorized.yaml`](https://github.com/hdot123/scheduler/blob/main/authorized.yaml).
+Before wiring any engine workflows into a repo, check which preflight state the repo is in
+(full copy spec: [Preflight Status Spec](preflight-status.md)):
+
+- **待申请 (pending application, neutral guidance)** — repo not in the allowlist and no channel legs yet.
+  Apply at the entry point: open a PR adding the repo name to the `authorized` list in
+  [`authorized.yaml`](https://github.com/hdot123/scheduler/blob/main/authorized.yaml).
+  After merge, the scheduler repo's `whitelist-sync` workflow (plan → apply) lays down the channel legs.
+- **权限故障 (credential fault, red → owner)** — authorization unreadable / PAT unreachable.
+  This is a scheduler-side credential problem (PAT scope, expiry, or revocation); consumers cannot self-heal.
+  Escalate to the owner of the scheduler repo (1Password `GitHub-PAT-A-Z` custodian).
+- **已授权缺配 (authorized but unsynced, red → sync)** — repo listed in `authorized.yaml` but legs missing
+  (variable / secret / runner). Check the scheduler repo's pinned issue「白名单对账 · 每日状态」for the
+  🟡 row, then run scheduler's `whitelist-sync` workflow: `mode=plan` to get the plan and `plan_hash`,
+  then `mode=apply` with that hash.
+
+Standard fail-closed copy seen at pipeline entry when unauthorized:
+
+> 未授权消费引擎，走授权流程：本仓未设置 repo variable `ENGINE_CONSUMERS`
+> （授权四步：variable → PAT → runner → 6 阶段验收）。
+> 申请入口：向 [hdot123/scheduler 的 authorized.yaml](https://github.com/hdot123/scheduler/blob/main/authorized.yaml)
+> 提 PR 加一行本仓名，合并后由 whitelist-sync 铺设通道。
+
 ## Double True Source Declaration
 
 - `hdot123/infraro-core` = Engine unique forward original source
@@ -130,5 +156,6 @@ The following capabilities are not migratable:
 - [TypeScript Stack Templates](../templates/typescript/)
 - [Naming Contracts](../docs/naming-contracts.md)
 - [Base Layer Templates](../docs/base-layer-templates.md)
+- [Preflight Status Spec](../docs/preflight-status.md)
 - [Double True Source Declaration](../docs/double-true-source.md)
 - [Boundary Documentation](../docs/BOUNDARY.md)
