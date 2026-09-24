@@ -48,6 +48,7 @@ pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9
 
 ## Documentation
 
+- [Architecture（四组件架构，所有者裁定 v2 对齐）](docs/architecture.md)
 - [Getting Started](docs/getting-started.md)
 - [Consumer Onboarding Guide](docs/consumer-onboarding.md)
 - [Naming Contracts](docs/naming-contracts.md)
