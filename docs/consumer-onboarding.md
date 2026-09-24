@@ -100,7 +100,8 @@ Follow the per-repository base template for repository settings:
 ## Engine Authorization Preflight（三态与申请入口）
 
 Engine consumption is allowlist-gated. The single source of truth for who may consume the engine is
-[`hdot123/scheduler` → `authorized.yaml`](https://github.com/hdot123/scheduler/blob/main/authorized.yaml).
+[`hdot123/scheduler` → `authorized.yaml`](https://github.com/hdot123/scheduler/blob/main/authorized.yaml)
+(唯一登记与对账入口；不构成匿名拉取的技术闸门；技术强制需凭证链／已列为不迁移项的除外)。
 Before wiring any engine workflows into a repo, check which preflight state the repo is in
 (full copy spec: [Preflight Status Spec](preflight-status.md)):
 

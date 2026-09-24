@@ -1,7 +1,7 @@
 # Preflight Status Copy Spec（三态文案规范）
 
 声明层规范：消费仓接入与排障时的 preflight 三态文案。所有模板与文档统一引用本规范，
-不得自造口径。真源 = `hdot123/scheduler` 仓 `authorized.yaml`（引擎消费白名单唯一授权入口）。
+不得自造口径。真源 = `hdot123/scheduler` 仓 `authorized.yaml`（唯一登记与对账入口；不构成匿名拉取的技术闸门；技术强制需凭证链／已列为不迁移项的除外）。
 
 ## 三态定义与文案
 
