@@ -111,7 +111,7 @@ flip 门禁未通过之前，引擎交付一切以现行「公开交付面」形
 
 ### 3.5 组件关系图
 
-```
+```text
 公开消费项目（PUBLIC 仓库）
     │ 经 infraro 声明协议接入 → GitHub-hosted runner 执行
     │ （零长期凭据；与自建 Runner、runner-hub 完全无关）
