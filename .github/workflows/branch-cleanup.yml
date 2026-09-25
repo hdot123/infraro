@@ -1,5 +1,5 @@
 # Branch Cleanup thin caller（声明仓模板，对应引擎 reusable workflow）
-# 调用引擎仓 reusable workflow（hdot123/infraro-core/actions/branch-cleanup）
+# 调用引擎镜像仓 composite action（hdot123/infraro-core-mirror/actions/branch-cleanup，M6.2 锚点切换）
 # 通过 composite action 接口，保持与消费层模板相同的 thin-caller 模式。
 
 name: Branch Cleanup
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Branch Cleanup
-        uses: hdot123/infraro-core/actions/branch-cleanup@3695445b1d8df8997de35d39256ffe596d229c8c
+        uses: hdot123/infraro-core-mirror/actions/branch-cleanup@v0.19.0
         with:
           mode: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event_name == 'pull_request' && 'immediate' || 'scheduled') }}
           trigger-branch: ${{ github.event_name == 'workflow_dispatch' && inputs.branch || github.event.pull_request.head.ref || '' }}

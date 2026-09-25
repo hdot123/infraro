@@ -17,7 +17,7 @@ Recommended rules for all infraro-enabled repositories:
 
 Recommended allowed actions for security:
 
-- `hdot123/infraro-core/**` - infraro engine workflows
+- `hdot123/infraro-core-mirror/**` - infraro engine mirror workflows (M6.2 consumption face)
 - `actions/*` - GitHub official actions
 - `github/*` - GitHub specific actions
 - Selected third-party actions as needed

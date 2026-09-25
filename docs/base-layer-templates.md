@@ -18,7 +18,8 @@ Configure GitHub Actions permissions:
 
 - Set `allowed_actions` to `selected`
 - Add patterns for trusted actions:
-  - `hdot123/infraro-core/**`
+  - `hdot123/*`
+  - `hdot123/infraro-core-mirror/**` (engine consumption mirror, M6.2)
   - `actions/*`
   - `github/*`
   - Other trusted third-party actions

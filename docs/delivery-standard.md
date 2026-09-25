@@ -8,7 +8,7 @@
 
 | 层 | 仓库 | 可见性 | 职责 | 真源边界 |
 | --- | --- | --- | --- | --- |
-| 引擎层 | `hdot123/infraro-core` | 公开（匿名访问） | reusable workflows、composite actions、pip 可装引擎包 | 逻辑唯一真源 |
+| 引擎层 | `hdot123/infraro-core` | 公开（匿名访问；消费面经 `hdot123/infraro-core-mirror` 镜像桥，M6.2） | reusable workflows、composite actions、pip 可装引擎包 | 逻辑唯一真源 |
 | 声明层 | `hdot123/infraro` | 公开 | 双栈模板 + docs 面 | 模板唯一真源 |
 | 消费层 | `hdot123/consumer-a`（Python 栈）/ `hdot123/consumer-b`（TypeScript 栈） | 私有（Pro） | 消费引擎与模板的样板仓 | 镜像物（无模板所有权） |
 
@@ -51,7 +51,7 @@ graph TD
 
 ### 2.2 Tag 命名
 
-版本 tag 遵循 `vMAJOR.MINOR.PATCH`（当前主线 `v0.18.x`，`v0.18.9` = commit `f041789`）。所有下游锚点引用该 tag（见 3.2 锚点纪律）。
+版本 tag 遵循 `vMAJOR.MINOR.PATCH`（当前主线 `v0.19.x`，`v0.19.0` = commit `a00de5c`）。所有下游锚点引用该 tag（见 3.2 锚点纪律）。
 
 ### 2.3 Ruleset 硬化清单
 
@@ -97,11 +97,11 @@ graph TD
 
 | 文件 | 形态 | 锚点形态 |
 | --- | --- | --- |
-| `evolution-scan.yml` | thin-caller | `uses@v0.18.9` |
-| `evolution-heartbeat.yml` | thin-caller | `uses@v0.18.9` |
-| `droid-review.yml` | thin-caller（分片流水线委托引擎，聚合 job 留本地） | reusable `@v0.18.9` + 聚合 action SHA pin |
-| `droid-review-watchdog.yml` | thin-caller（双 handler 委托 + 本地 quota-sweep） | `uses@v0.18.9` |
-| `auto-merge.yml` | thin-caller | `uses@v0.18.9` |
+| `evolution-scan.yml` | thin-caller | `uses@v0.19.0` |
+| `evolution-heartbeat.yml` | thin-caller | `uses@v0.19.0` |
+| `droid-review.yml` | thin-caller（分片流水线委托引擎，聚合 job 留本地） | reusable `@v0.19.0` + 聚合 action SHA pin |
+| `droid-review-watchdog.yml` | thin-caller（双 handler 委托 + 本地 quota-sweep） | `uses@v0.19.0` |
+| `auto-merge.yml` | thin-caller | `uses@v0.19.0` |
 | `governance.yml` | copy-form（provenance header） | composite action SHA pin |
 | `branch-cleanup.yml` | copy-form（provenance header） | composite action SHA pin |
 
@@ -110,7 +110,7 @@ graph TD
 | 文件 | 职责 |
 | --- | --- |
 | `.github/workflows/ci.yml` | 消费仓 CI 主工作流（结构不变量见 4.2） |
-| `.evolution/config.yml` | evolution 配置（含 `engine_ref: v0.18.9` 锚） |
+| `.evolution/config.yml` | evolution 配置（含 `engine_ref: v0.19.0` 锚） |
 | `.evolution/suppress.json` | 抑制清单（出厂为空 `suppressions: []`） |
 | `.github/actionlint.yaml` | actionlint 的 self-hosted-runner labels 声明 |
 | `.github/review/shard-review-prompt.md` | 分片 review prompt（JSON 输出契约 + 预算约束） |
@@ -118,7 +118,7 @@ graph TD
 
 ### 3.2 锚点纪律
 
-- 单一 tag：同一交付周期内，全部 reusable workflow 引用统一锚同一引擎 tag（当前 `v0.18.9`）；有效锚点（`uses@tag` 与 `engine_ref`）经 grep 只允许出现一个版本号。
+- 单一 tag：同一交付周期内，全部 reusable workflow 引用统一锚同一引擎 tag（当前 `v0.19.0`）；有效锚点（`uses@tag` 与 `engine_ref`）经 grep 只允许出现一个版本号。
 - 禁 `@main` 浮动引用（INFRA-651）；禁跨版本混锚。
 - copy-form 模板的 provenance header（source / tag / commit / date）是历史记录，不属于有效锚点；其 composite action 走不可变 SHA pin。
 - 文件名契约（载荷文件名，字节级固定）：`evolution-scan.yml`（心跳引擎按 `SCANNER_WORKFLOW` 经 `gh run list --workflow` 探活并 `gh workflow run` 自愈拉起）、`evolution-heartbeat.yml`（扫描器反向探活，INFRA-588）、`droid-review-watchdog.yml`（workflow 名 `Droid Review Watchdog`，其 `workflow_run` 监听名数组字节级匹配兄弟 workflow 名）。
@@ -159,8 +159,8 @@ graph TD
 | secret | 用途 | 注入形态 |
 | --- | --- | --- |
 | `FACTORY_API_KEY` | droid-review 分片流水线 | snake 转发 `factory_api_key` |
-| `NVIDIA_KONG_PROXY_KEY` | droid-review 分片流水线 | snake 转发 `nvidia_kong_proxy_key` |
-| `LUMIVANE_CFAT` | droid-review 分片流水线（双头 BYOM） | snake 转发 `lumivane_cfat`；endpoint 走 baseUrl `https://ai.lumivane.dpdns.org/custom-node01/v1` + `cf-aig-authorization` header。任何文档/模板不落 key 值 |
+| `OPENCODE_GO_KEY` | droid-review 分片流水线（BYOM Authorization 透传） | snake 转发 `opencode_go_key`；OpenCode Go 订阅 key，由客户端 Authorization 携带（custom provider 不做 BYOK 注入） |
+| `GO_GITHUB_RUN_TOKEN` | droid-review 分片流水线（CF AI Gateway 认证） | snake 转发 `go_github_run_token`；`cf-aig-authorization: Bearer <...>` header。任何文档/模板不落 key 值 |
 | `DISPATCH_TOKEN` | scan / heartbeat / auto-merge / branch-cleanup | snake 转发 `dispatch_token` |
 | `LINEAR_API_KEY` | scan / branch-cleanup | snake 转发 `linear_api_key` |
 
@@ -190,7 +190,7 @@ secrets 传参为 snake-only 单形态（SNAKE-CONVERGENCE），禁止连字符�
 | 2 | pin 单一 grep | 对有效锚点（`uses@tag`、`engine_ref`）grep 只出现一个引擎版本号 |
 | 3 | PR 全绿 squash | 三仓 PR 检查全绿后 squash 合并；全程无 `--admin` |
 | 4 | main run success 回读 | 合并后回读 main 分支最新 run 为 success |
-| 5 | 匿名 install 实测 | 无 token 执行 `pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9` 成功 |
+| 5 | 匿名 install 实测 | 无 token 执行 `pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.19.0` 成功 |
 | 6 | droid-review 真跑 | review 有实际审查轮次（非 0-turn 空跑），聚合 check `droid-review` 为 success |
 | 7 | 三槽位 runner 证据 | `scan` / `heartbeat` / `governance` 的 run 落在自建 runner（`runner_name=ce-01` 证据回读） |
 | 8 | dispatch 白名单负证 | 从非白名单 head 手动 `workflow_dispatch` → run 呈 skipped / fail-closed 形态（E1-5 守卫生效） |

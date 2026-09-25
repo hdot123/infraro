@@ -4,22 +4,23 @@ This guide explains how to set up a consumer repository to work with the infraro
 
 ## Architecture Overview
 
-The v3 architecture uses public engine repositories with anonymous access:
+The v3 architecture uses a public mirror bridge for engine access (M6.2):
 
-- **Public engine**: `hdot123/infraro-core` (public, anonymous access)
+- **Engine logic truth source**: `hdot123/infraro-core` (source of truth for engine logic)
+- **Public consumption mirror**: `hdot123/infraro-core-mirror` (public, anonymous access; mechanical release snapshots)
 - **Declaration layer**: `hdot123/infraro` (public, contains templates and docs)
-- **Consumer repositories**: Private repositories that consume the engine
+- **Consumer repositories**: Private repositories that consume the engine via the mirror
 
 ## Installation
 
-The engine can be installed anonymously without requiring any private tokens:
+The engine can be installed anonymously from the public mirror without requiring any private tokens:
 
 ```bash
-# Install the engine using git+https (no token required)
-pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9
+# Install the engine from the public mirror via git+https (no token required)
+pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.19.0
 ```
 
-**Note**: This is a public repository that can be accessed anonymously. No legacy tokens or credential rotation tools are required.
+**Note**: The mirror is a public repository that can be accessed anonymously. Engine logic truth remains in the source engine repository; the mirror carries mechanical release snapshots. No legacy tokens or credential rotation tools are required.
 
 ## Runner Registration
 

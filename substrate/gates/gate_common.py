@@ -3,7 +3,7 @@
 Public-repo hygiene: no gate script ever hardcodes a host path (zero
 ``/Users/``, zero ``/home/``). The engine repo is resolved via
 ``ENGINE_REPO_DIR`` (CI injects it from a cross-repo checkout); locally the
-default sibling checkout ``../infraro-core`` is used when present.
+default sibling checkout ``../infraro-core-mirror`` is used when present.
 
 Stock matching: gate findings that reproduce previously-registered stock are
 reported (never silently dropped) and do not fail the run, provided the
@@ -20,8 +20,11 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-ENGINE_REPO_URL = "https://github.com/hdot123/infraro-core"
-ENGINE_REPO_SLUG = "hdot123/infraro-core"
+# M6.2 bridge: templates/consumers anchor the public mirror; gates validate
+# the face the templates actually call. Truth source for engine LOGIC stays
+# the original engine repository (docs face documents that boundary).
+ENGINE_REPO_URL = "https://github.com/hdot123/infraro-core-mirror"
+ENGINE_REPO_SLUG = "hdot123/infraro-core-mirror"
 REGISTRY_PATH = REPO_ROOT / "substrate" / "gate0-exemptions.md"
 
 
@@ -32,7 +35,7 @@ def engine_dir() -> Path | None:
         candidate = Path(env_dir)
         if (candidate / ".github" / "workflows").is_dir():
             return candidate
-    sibling = REPO_ROOT.parent / "infraro-core"
+    sibling = REPO_ROOT.parent / "infraro-core-mirror"
     if (sibling / ".github" / "workflows").is_dir():
         return sibling
     return None
