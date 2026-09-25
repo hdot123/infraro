@@ -159,8 +159,8 @@ graph TD
 | secret | 用途 | 注入形态 |
 | --- | --- | --- |
 | `FACTORY_API_KEY` | droid-review 分片流水线 | snake 转发 `factory_api_key` |
-| `NVIDIA_KONG_PROXY_KEY` | droid-review 分片流水线 | snake 转发 `nvidia_kong_proxy_key` |
-| `LUMIVANE_CFAT` | droid-review 分片流水线（双头 BYOM） | snake 转发 `lumivane_cfat`；endpoint 走 baseUrl `https://ai.lumivane.dpdns.org/custom-node01/v1` + `cf-aig-authorization` header。任何文档/模板不落 key 值 |
+| `OPENCODE_GO_KEY` | droid-review 分片流水线（BYOM Authorization 透传） | snake 转发 `opencode_go_key`；OpenCode Go 订阅 key，由客户端 Authorization 携带（custom provider 不做 BYOK 注入） |
+| `GO_GITHUB_RUN_TOKEN` | droid-review 分片流水线（CF AI Gateway 认证） | snake 转发 `go_github_run_token`；`cf-aig-authorization: Bearer <...>` header。任何文档/模板不落 key 值 |
 | `DISPATCH_TOKEN` | scan / heartbeat / auto-merge / branch-cleanup | snake 转发 `dispatch_token` |
 | `LINEAR_API_KEY` | scan / branch-cleanup | snake 转发 `linear_api_key` |
 

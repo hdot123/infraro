@@ -31,8 +31,8 @@ pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.19.0
 
 消费仓需配置的 org/repo secrets（只列名，值零入仓）：
 
-- `NVIDIA_KONG_PROXY_KEY` — droid-review 自定义模型 apiKey（lumivane CF AiGateway 双头之一）
-- `LUMIVANE_CFAT` — `cf-aig-authorization: Bearer <...>` 头（双头之二）
+- `OPENCODE_GO_KEY` — droid-review BYOM Authorization 透传（OpenCode Go 订阅 key）
+- `GO_GITHUB_RUN_TOKEN` — `cf-aig-authorization: Bearer <...>` 头（go-github AI Gateway run token）
 - `FACTORY_API_KEY` — droid 会话触发
 
 历史形态（`LUMIVANE_BASE_URL`、旧端点 `ai.exa.edu.kg` 三 secret 形态）已废弃，模板中不再引用。

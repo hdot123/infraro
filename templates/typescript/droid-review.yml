@@ -75,8 +75,8 @@ jobs:
       shard_max_parallel: ${{ inputs.shard_max_parallel || '3' }}
     secrets:
       factory_api_key: ${{ secrets.FACTORY_API_KEY }}
-      nvidia_kong_proxy_key: ${{ secrets.NVIDIA_KONG_PROXY_KEY }}
-      lumivane_cfat: ${{ secrets.LUMIVANE_CFAT }}
+      opencode_go_key: ${{ secrets.OPENCODE_GO_KEY }}
+      go_github_run_token: ${{ secrets.GO_GITHUB_RUN_TOKEN }}
 
   droid-review:
     name: droid-review
