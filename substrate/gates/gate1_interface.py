@@ -3,21 +3,23 @@
 Every declaration template's engine call must match the engine's declared
 face, per key:
 
-1. ``uses: hdot123/infraro-core/.github/workflows/X.yml@<ref>`` — the
+1. ``uses: hdot123/infraro-core-mirror/.github/workflows/X.yml@<ref>`` — the
    workflow must exist and the call's ``with:``/``secrets:`` keys must match
    its ``workflow_call`` face exactly (undeclared key passed → red; required
    key missing → red). ``<ref>`` must be a live tag on the engine remote
    (dead-tag detection, e.g. the @v0.15.0 class).
-2. ``uses: hdot123/infraro-core/actions/<name>@<sha>`` — the composite action
+2. ``uses: hdot123/infraro-core-mirror/actions/<name>@<sha-or-tag>`` — the composite action
    must exist, input keys must match its face, and the pinned SHA must exist
    in engine history.
 3. Declaration docs referencing engine workflows/actions must use live refs.
 
 Engine face source: ``ENGINE_REPO_DIR`` (CI cross-repo checkout) or the local
-sibling ``../infraro-core``. Ref/SHA existence: engine clone when available,
+sibling ``../infraro-core-mirror``. Ref/SHA existence: engine clone when available,
 else ``git ls-remote`` (anonymous, public repo). Stock findings already in
 substrate/gate0-exemptions.md (owner + owning feature) are reported but do
 not fail; NEW findings do.
+
+M6.2 bridge: the gates validate the mirror face (what templates anchor).
 """
 
 from __future__ import annotations

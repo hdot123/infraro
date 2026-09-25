@@ -19,13 +19,13 @@
 
 锚点纪律：thin-caller 全锚（engine=workflow=同 tag），全仓禁止 `@main`。引擎升级由发版公告链路自动派发 pin-bump PR（release-gateway），齐步走到新 tag。
 
-## 引擎安装（匿名免认证）
+## 引擎安装（匿名免认证，经公开镜像）
 
 ```bash
-pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9
+pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.18.9
 ```
 
-引擎为公开仓 `hdot123/infraro-core`，git+https 匿名拉取，无需任何 token。
+引擎逻辑真源为 `hdot123/infraro-core`；自 M6.2 起消费面（pip 安装、workflow 锚点）统一走公开镜像仓 `hdot123/infraro-core-mirror`（机械同步 release 快照，匿名拉取，无需任何 token）。镜像桥为「先架桥后拆旧路」形态：翻转前双锚点可用。
 
 ## Secrets（snake 单形态，三件）
 

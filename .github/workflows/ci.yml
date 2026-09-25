@@ -62,8 +62,8 @@ jobs:
       - name: Checkout engine repo (interface source of truth)
         uses: actions/checkout@v7
         with:
-          repository: hdot123/infraro-core
-          path: infraro-core
+          repository: hdot123/infraro-core-mirror
+          path: infraro-core-mirror
           persist-credentials: false
 
       - name: Setup Python
@@ -77,13 +77,13 @@ jobs:
       - name: "Substrate gate 0: coverage completeness"
         continue-on-error: true
         env:
-          ENGINE_REPO_DIR: ${{ github.workspace }}/infraro-core
+          ENGINE_REPO_DIR: ${{ github.workspace }}/infraro-core-mirror
         run: python substrate/gates/gate0_coverage.py
 
       - name: "Substrate gate 1: interface reality"
         continue-on-error: true
         env:
-          ENGINE_REPO_DIR: ${{ github.workspace }}/infraro-core
+          ENGINE_REPO_DIR: ${{ github.workspace }}/infraro-core-mirror
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python substrate/gates/gate1_interface.py
 

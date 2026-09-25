@@ -31,7 +31,7 @@ permissions:
 jobs:
   heartbeat:
     # INFRA-651: reusable 模板引用钉 tag，与引擎 pin 同版本；禁止 @main 浮动。
-    uses: hdot123/infraro-core/.github/workflows/evolution-heartbeat.yml@v0.18.9
+    uses: hdot123/infraro-core-mirror/.github/workflows/evolution-heartbeat.yml@v0.18.9
     with:
       runner: '["self-hosted","pve-linux"]'
     permissions:

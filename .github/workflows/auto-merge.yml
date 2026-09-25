@@ -1,5 +1,5 @@
 # Auto Merge thin caller（声明仓模板，对应引擎 reusable workflow）
-# 调用引擎仓 reusable workflow（hdot123/infraro-core/.github/workflows/auto-merge-pipeline.yml）
+# 调用引擎镜像仓 reusable workflow（hdot123/infraro-core-mirror/.github/workflows/auto-merge-pipeline.yml，M6.2 锚点切换）
 # 通过 workflow_call 接口，保持与消费层模板相同的 thin-caller 模式。
 
 name: Auto Merge
@@ -84,6 +84,6 @@ jobs:
     name: Auto-merge PR
     needs: resolve
     if: needs.resolve.outputs.pr_numbers != '' && needs.resolve.outputs.pr_numbers != '[]'
-    uses: hdot123/infraro-core/.github/workflows/auto-merge-pipeline.yml@v0.18.9
+    uses: hdot123/infraro-core-mirror/.github/workflows/auto-merge-pipeline.yml@v0.18.9
     secrets:
       dispatch_token: ${{ secrets.DISPATCH_TOKEN }}

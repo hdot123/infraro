@@ -8,7 +8,7 @@
 
 | 层 | 仓库 | 可见性 | 职责 | 真源边界 |
 | --- | --- | --- | --- | --- |
-| 引擎层 | `hdot123/infraro-core` | 公开（匿名访问） | reusable workflows、composite actions、pip 可装引擎包 | 逻辑唯一真源 |
+| 引擎层 | `hdot123/infraro-core` | 公开（匿名访问；消费面经 `hdot123/infraro-core-mirror` 镜像桥，M6.2） | reusable workflows、composite actions、pip 可装引擎包 | 逻辑唯一真源 |
 | 声明层 | `hdot123/infraro` | 公开 | 双栈模板 + docs 面 | 模板唯一真源 |
 | 消费层 | `hdot123/consumer-a`（Python 栈）/ `hdot123/consumer-b`（TypeScript 栈） | 私有（Pro） | 消费引擎与模板的样板仓 | 镜像物（无模板所有权） |
 
@@ -190,7 +190,7 @@ secrets 传参为 snake-only 单形态（SNAKE-CONVERGENCE），禁止连字符�
 | 2 | pin 单一 grep | 对有效锚点（`uses@tag`、`engine_ref`）grep 只出现一个引擎版本号 |
 | 3 | PR 全绿 squash | 三仓 PR 检查全绿后 squash 合并；全程无 `--admin` |
 | 4 | main run success 回读 | 合并后回读 main 分支最新 run 为 success |
-| 5 | 匿名 install 实测 | 无 token 执行 `pip install git+https://github.com/hdot123/infraro-core.git@v0.18.9` 成功 |
+| 5 | 匿名 install 实测 | 无 token 执行 `pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.18.9` 成功 |
 | 6 | droid-review 真跑 | review 有实际审查轮次（非 0-turn 空跑），聚合 check `droid-review` 为 success |
 | 7 | 三槽位 runner 证据 | `scan` / `heartbeat` / `governance` 的 run 落在自建 runner（`runner_name=ce-01` 证据回读） |
 | 8 | dispatch 白名单负证 | 从非白名单 head 手动 `workflow_dispatch` → run 呈 skipped / fail-closed 形态（E1-5 守卫生效） |
