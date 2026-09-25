@@ -25,7 +25,7 @@ jobs:
     runs-on: [self-hosted, pve-linux]
     steps:
       - name: Governance check
-        uses: hdot123/infraro-core-mirror/actions/governance-check@v0.18.9 # mirror tag (was SHA 3695445 pin v0.7.2 PR #138, re-anchored to mirror)
+        uses: hdot123/infraro-core-mirror/actions/governance-check@v0.19.0 # mirror tag (was SHA 3695445 pin v0.7.2 PR #138, re-anchored to mirror)
         with:
           owner-login: hdot123
           protected-patterns: .evolution/**,.github/workflows/**,src/infra_core/engine/**,webhook-scripts/**

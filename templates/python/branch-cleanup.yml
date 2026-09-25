@@ -57,7 +57,7 @@ jobs:
       )
     steps:
       - name: Branch Cleanup
-        uses: hdot123/infraro-core-mirror/actions/branch-cleanup@v0.18.9 # mirror tag (was SHA 3695445 pin v0.16.0 PR #266, re-anchored to mirror)
+        uses: hdot123/infraro-core-mirror/actions/branch-cleanup@v0.19.0 # mirror tag (was SHA 3695445 pin v0.16.0 PR #266, re-anchored to mirror)
         with:
           mode: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event_name == 'pull_request' && 'immediate' || 'scheduled') }}
           trigger-branch: ${{ github.event_name == 'workflow_dispatch' && inputs.branch || github.event.pull_request.head.ref || '' }}

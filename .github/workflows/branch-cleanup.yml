@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Branch Cleanup
-        uses: hdot123/infraro-core-mirror/actions/branch-cleanup@v0.18.9
+        uses: hdot123/infraro-core-mirror/actions/branch-cleanup@v0.19.0
         with:
           mode: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event_name == 'pull_request' && 'immediate' || 'scheduled') }}
           trigger-branch: ${{ github.event_name == 'workflow_dispatch' && inputs.branch || github.event.pull_request.head.ref || '' }}

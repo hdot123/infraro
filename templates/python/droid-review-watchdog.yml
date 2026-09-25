@@ -40,7 +40,7 @@ jobs:
     if: >
       github.event.workflow_run.name == 'Droid Auto Review' &&
       github.event.workflow_run.conclusion == 'failure'
-    uses: hdot123/infraro-core-mirror/.github/workflows/droid-review-watchdog-handlers.yml@v0.18.9
+    uses: hdot123/infraro-core-mirror/.github/workflows/droid-review-watchdog-handlers.yml@v0.19.0
     permissions:
       actions: write
     with:
@@ -55,7 +55,7 @@ jobs:
     if: >
       github.event.workflow_run.name == 'CI' &&
       github.event.workflow_run.conclusion == 'failure'
-    uses: hdot123/infraro-core-mirror/.github/workflows/droid-review-watchdog-handlers.yml@v0.18.9
+    uses: hdot123/infraro-core-mirror/.github/workflows/droid-review-watchdog-handlers.yml@v0.19.0
     permissions:
       actions: write
     with:

@@ -61,7 +61,7 @@ concurrency:
 
 jobs:
   droid-auto-review:
-    uses: hdot123/infraro-core-mirror/.github/workflows/droid-review-shards.yml@v0.18.9
+    uses: hdot123/infraro-core-mirror/.github/workflows/droid-review-shards.yml@v0.19.0
     permissions:
       contents: read
       pull-requests: read
@@ -91,7 +91,7 @@ jobs:
       actions: read
     steps:
       - name: Aggregate and publish findings
-        uses: hdot123/infraro-core-mirror/actions/droid-review-aggregate@v0.18.9 # mirror tag (was SHA 3695445 pin v0.18.5, re-anchored to mirror)
+        uses: hdot123/infraro-core-mirror/actions/droid-review-aggregate@v0.19.0 # mirror tag (was SHA 3695445 pin v0.18.5, re-anchored to mirror)
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pr-number: ${{ needs.droid-auto-review.outputs.pr_number }}

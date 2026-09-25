@@ -17,7 +17,7 @@ The engine can be installed anonymously from the public mirror without requiring
 
 ```bash
 # Install the engine from the public mirror via git+https (no token required)
-pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.18.9
+pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.19.0
 ```
 
 **Note**: The mirror is a public repository that can be accessed anonymously. Engine logic truth remains in the source engine repository; the mirror carries mechanical release snapshots. No legacy tokens or credential rotation tools are required.
