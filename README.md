@@ -35,6 +35,13 @@ pip install git+https://github.com/hdot123/infraro-core-mirror.git@v0.19.0
 - `GO_GITHUB_RUN_TOKEN` — `cf-aig-authorization: Bearer <...>` 头（go-github AI Gateway run token）
 - `FACTORY_API_KEY` — droid 会话触发
 
+### vars vs secrets（公开仓 URL 红线）
+
+repo variable（`vars:` 注入）的值会**原样打印进 run 日志**，GitHub 不打码 variable 展开值（打码是 secret 专属行为）。因此：
+
+- **公开仓的 webhook/回调 URL 必须走 secret**——URL 虽属「非机密配置」，但进入公开 run 日志即成可枚举攻击面（配置与凭证分离的例外条款）；
+- `vars:` 注入形态仅限私有仓——run 日志不可公开时，vars 的可审计、免重部署优势才安全可用。
+
 历史形态（`LUMIVANE_BASE_URL`、旧端点 `ai.exa.edu.kg` 三 secret 形态）已废弃，模板中不再引用。
 
 ## Runner 拓扑（born-complete 标配）
