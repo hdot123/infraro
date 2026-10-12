@@ -75,7 +75,7 @@ graph TD
 | --- | --- | --- |
 | `evolution-scan.yml` | `runner`（JSON 数组串） | `dispatch_token`、`linear_api_key` |
 | `evolution-heartbeat.yml` | `runner`（JSON 数组串） | `dispatch_token` |
-| `droid-review-shards.yml` | `pr_number`、`head_sha`、`shard_max_files`、`shard_max_count`、`shard_timeout_minutes`、`shard_max_parallel` | `factory_api_key`、`nvidia_kong_proxy_key`、`lumivane_cfat`（双头 BYOM） |
+| `droid-review-shards.yml` | `pr_number`、`head_sha`、`shard_max_files`、`shard_max_count`、`shard_timeout_minutes`、`shard_max_parallel` | `factory_api_key`、`opencode_go_key`、`go_github_run_token`（BYOM 三件）、`worker_ci_key`（x-ci-key 门禁头；声明面 optional，门禁单一真源在 Worker，缺失即 401 fail-closed） |
 | `auto-merge-pipeline.yml` | — | `dispatch_token` |
 | `droid-review-watchdog-handlers.yml` | `mode`、`run_id`、`run_attempt`、`head_sha`、`max_attempt` | — |
 
@@ -165,6 +165,8 @@ graph TD
 | `LINEAR_API_KEY` | scan / branch-cleanup | snake 转发 `linear_api_key` |
 
 secrets 传参为 snake-only 单形态（SNAKE-CONVERGENCE），禁止连字符形态。
+
+vars 与 secrets 的分工红线：repo variable（`vars:` 注入）的值会**原样打印进 run 日志**（GitHub 不打码 variable 展开值，打码是 secret 专属行为）。公开仓的 webhook/回调 URL 必须走 secret；`vars:` 形态仅限私有仓。URL 常被归为「非机密配置」，但其进入公开 run 日志即成可枚举攻击面——这是配置与凭证分离的例外条款，公开的引擎层与声明层一律适用。
 
 ### 4.4 Ruleset 后置顺序
 
